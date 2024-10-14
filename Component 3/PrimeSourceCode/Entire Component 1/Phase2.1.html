@@ -106,10 +106,7 @@
             inputBox.disabled = false; // Enable input
             inputBox.focus(); // Auto-focus input box
 
-            // Generate a unique test ID
-            testID = 'ID-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
-            document.getElementById('test-id').innerText = testID;
-
+    
             // Store the test ID in localStorage so it can be retrieved later
             localStorage.setItem('testID', testID);
 
@@ -202,13 +199,13 @@
 
         // Function to submit results to Google Form
         function submitResultsToGoogleForm() {
-            const formURL = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSe3LPtiiBOeowHxt_WX8Fv-Jluz-KYm8OZY6c77B4atR33WIQ/formResponse'; // Google Form URL
+            const formURL = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSc7nOlCfCPuQK5IYxJIQgcU95IGD_3oByk-j5zfbyiT0p39pA/formResponse'; // Google Form URL
             const data = {
-                'entry.1547329723': testID, // Unique Test ID
-                'entry.234930441': bAppeared, // 'B' appeared count
-                'entry.71736191': bCorrect, // Correct 'B' inputs
-                'entry.2134272409': bMissed, // Missed 'B' inputs
-                'entry.565893164': wrongKeyCount // Wrong keys pressed
+                'entry.382799424': testID, // Unique Test ID
+                'entry.599379425': bAppeared, // 'B' appeared count
+                'entry.1447226105': bCorrect, // Correct 'B' inputs
+                'entry.1331843799': bMissed, // Missed 'B' inputs
+                'entry.1168723483': wrongKeyCount // Wrong keys pressed
             };
             alert("Submitted Successfully")
 

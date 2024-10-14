@@ -77,6 +77,18 @@
         let nextPageButtonVisible = false; // Flag to track if the next page button is visible
         let testID; // To hold the unique test ID
 
+        // Retrieve the test ID from localStorage
+        testID = localStorage.getItem('testID');
+
+        // If a test ID is found, display it
+        if (testID) {
+            document.getElementById('test-id').innerText = testID;
+        } else {
+            console.error("No test ID found.");
+        }
+        
+        
+        
         // HTML elements
         let timerElement = document.getElementById('timer');
         let letterBox = document.getElementById('letter-box');
@@ -92,13 +104,6 @@
             inputBox.focus(); // Auto-focus input box
 
             const testID = localStorage.getItem('testID');
-
-// Display the test ID on the page
-if (testID) {
-document.getElementById('test-id').textContent = testID;
-} else {
-document.getElementById('test-id').textContent = 'Test ID not found!';
-}
 
             // Start countdown
             countdown = setInterval(() => {
@@ -188,13 +193,13 @@ document.getElementById('test-id').textContent = 'Test ID not found!';
 
         // Function to submit results to Google Form
         function submitResultsToGoogleForm() {
-            const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/formResponse'; // Google Form URL
+            const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLSfkeqHYhPfTur8hc_p8oHbUcWAy_2dtLFPbrtDygKzzdTfb3w/formResponse'; // Google Form URL
             const data = {
-                'entry.366340186': testID, // Unique Test ID
-                'entry.1502334890': dAppeared, // 'D' appeared count
-                'entry.606959625': dCorrect, // Correct 'D' inputs
-                'entry.843480235': dMissed, // Missed 'D' inputs
-                'entry.717468922': wrongKeyCount // Wrong keys pressed
+                'entry.44071630': testID, // Unique Test ID
+                'entry.1250344136': dAppeared, // 'D' appeared count
+                'entry.793642178': dCorrect, // Correct 'D' inputs
+                'entry.875010501': dMissed, // Missed 'D' inputs
+                'entry.1366118905': wrongKeyCount // Wrong keys pressed
             };
             alert("Submitted Successfully")
 
