@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet Test</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+            gap: 10px;
+        }
+        .alphabet-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 0;
+            width: 100%;
+        }
+        .alphabet-grid div {
+            background-color: white;
+            color: black;
+            font-size: 2em;
+            margin: 10px;
+            padding: 20px;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .timer {
+            font-size: 5em;
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            font-size: 1.5em;
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: 4px solid black; /* Black border */
+            background-color: white; /* White background */
+            color: black; /* Black text */
+            border-radius: 5px;
+        }
+        .result-table {
+            margin-top: 20px;
+            font-size: 1.5em;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .result-table th, .result-table td {
+            padding: 10px;
+            border: 1px solid white;
+        }
+        .hidden {
+            display: none;
+        }
+        .text2size {
+            text-align: center;
+            font-size: 50px;
+        }
+        .current-number {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .current-numbers {
+            font-size: 8em;
+            margin: 10px 0;
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+            .alphabet-grid {
+                width: 40%;
+            }
+            .right-section {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text2size">Stage 2 of Testing</h1>
+
+    <div class="container">
+        <!-- Left section: Alphabet grid -->
+        <div class="alphabet-grid">
+            <div>A<br>1</div>
+            <div>B<br>2</div>
+            <div>C<br>3</div>
+            <div>D<br>4</div>
+            <div>E<br>5</div>
+            <div>F<br>6</div>
+            <div>G<br>7</div>
+            <div>H<br>8</div>
+            <div>I<br>9</div>
+            <div>J<br>10</div>
+            <div>K<br>11</div>
+            <div>L<br>12</div>
+            <div>M<br>13</div>
+            <div>N<br>14</div>
+            <div>O<br>15</div>
+            <div>P<br>16</div>
+            <div>Q<br>17</div>
+            <div>R<br>18</div>
+            <div>S<br>19</div>
+            <div>T<br>20</div>
+            <div>U<br>21</div>
+            <div>V<br>22</div>
+            <div>W<br>23</div>
+            <div>X<br>24</div>
+            <div>Y<br>25</div>
+            <div>Z<br>26</div>
+        </div>
+        
+        <!-- Right section: Input and timer -->
+        <div class="right-section">
+            <div class="timer" id="timer">00:10</div>
+            <div class="current-number" id="currentNumber">Watch here Carefully </div>
+           
+            <input type="text" id="inputField" placeholder="Enter the corresponding alphabet..." maxlength="1">
+            <button onclick="startTest()">Start Test</button>
+
+            <!-- Table to display results -->
+            <table class="result-table hidden" id="resultTable">
+                <thead>
+                    <tr>
+                        <th>Round</th>
+                        <th>Correct Answer</th>
+                        <th>Your Answer</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBody">
+                    <!-- Results will be appended here -->
+                </tbody>
+            </table>
+
+            <!-- Download button -->
+            <button class="hidden" id="downloadBtn" onclick="downloadResults()">Download Results</button>
+
+            <!-- Go to Test 3 button -->
+            <button class="hidden" id="goToTest3Btn" onclick="goToNextTest()">Go to Test 3</button>
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 10;
+        let timer;
+        let correctAnswers = 0;
+        let attempts = 0;
+        const totalRounds = 5;
+        let currentRandomNumber;
+        const results = []; // To store results
+        const alphabetMap = {
+            1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H', 9: 'I', 
+            10: 'J', 11: 'K', 12: 'L', 13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 
+            18: 'R', 19: 'S', 20: 'T', 21: 'U', 22: 'V', 23: 'W', 24: 'X', 25: 'Y', 26: 'Z'
+        };
+
+        function nextRound() {
+            if (attempts < totalRounds) {
+                attempts++;
+                currentRandomNumber = Math.floor(Math.random() * 26) + 1;
+                document.getElementById('currentNumber').textContent =currentRandomNumber;
+                document.getElementById('inputField').value = ''; // Reset input field
+                document.getElementById('inputField').focus(); // Focus on the input field
+                startTimer();
+            } else {
+                showResults();
+            }
+        }
+
+        function startTest() {
+            correctAnswers = 0;
+            attempts = 0;
+            results.length = 0; // Reset results array
+            document.getElementById('resultTable').classList.add('hidden'); // Hide results table
+            document.getElementById('downloadBtn').classList.add('hidden'); // Hide download button
+            document.getElementById('goToTest3Btn').classList.add('hidden'); // Hide "Go to Test 3" button
+            document.getElementById('currentNumber').textContent = "Watch Here Carefully"; // Reset current number
+            nextRound();
+        }
+
+        function startTimer() {
+            timeLeft = 10; // Reset timer to 10 seconds
+            document.getElementById('timer').textContent = "00:" + (timeLeft < 10 ? '0' : '') + timeLeft;
+            clearInterval(timer); // Clear any previous interval
+            timer = setInterval(countdown, 1000); // Start countdown
+        }
+
+        function countdown() {
+            timeLeft--;
+            document.getElementById('timer').textContent = "00:" + (timeLeft < 10 ? '0' : '') + timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer); // Stop timer at 0
+                checkAnswer(); // Auto-check if the user hasn't submitted
+            }
+        }
+
+        document.getElementById('inputField').addEventListener('input', function() {
+            checkAnswer(); // Automatically check answer on key press
+        });
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('inputField').value.toUpperCase();
+            const correctAnswer = alphabetMap[currentRandomNumber];
+            let resultText = userAnswer === correctAnswer ? 'Correct' : `Wrong (Correct: ${correctAnswer})`;
+
+            // Store result for this round
+            results.push({
+                round: attempts,
+                correctAnswer,
+                userAnswer,
+                result: resultText
+            });
+
+            nextRound();
+        }
+
+        function showResults() {
+            const resultTable = document.getElementById('resultTable');
+            const resultBody = document.getElementById('resultBody');
+            resultBody.innerHTML = ''; // Clear previous results
+
+            // Populate table with new results
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${result.round}</td>
+                    <td>${result.correctAnswer}</td>
+                    <td>${result.userAnswer}</td>
+                    <td>${result.result}</td>
+                `;
+                resultBody.appendChild(row);
+            });
+
+            resultTable.classList.remove('hidden'); // Show results table
+            document.getElementById('downloadBtn').classList.remove('hidden'); // Show download button
+            document.getElementById('goToTest3Btn').classList.remove('hidden'); // Show "Go to Test 3" button
+        }
+
+        function downloadResults() {
+            let csvContent = "data:text/csv;charset=utf-8,Round,Correct Answer,Your Answer,Result\n";
+
+            // Add each result to the CSV content
+            results.forEach(result => {
+                const row = `${result.round},${result.correctAnswer},${result.userAnswer},${result.result}\n`;
+                csvContent += row;
+            });
+
+            // Create a download link
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "alphabet_test_results.txt");
+
+            // Trigger download
+            link.click();
+        }
+
+        function goToNextTest() {
+            // Redirect to Test 3 (replace with actual URL or function)
+            window.location.href = "index3.html"; // Change this to your Test 3 page
+        }
+    </script>
+
+</body>
+</html>
