@@ -1,0 +1,57 @@
+// HTML elements
+        let timerElement = document.getElementById('timer');
+        let letterBox = document.getElementById('letter-box');
+        let inputBox = document.getElementById('input-box');
+        let pStatsElement = document.getElementById('p-stats');
+        let startBtn = document.getElementById('start-btn');
+        let nextPageBtn = document.getElementById('next-page-btn');
+
+        // Fetch unique test ID from the server
+        function fetchUniqueTestID() {
+            return fetch('store_test_id.php', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                testID = data.test_id;
+                document.getElementById('test-id').innerText = testID;
+                console.log('Test ID fetched:', testID);
+            })
+            .catch(error => {
+                console.error('Error fetching test ID:', error);
+            });
+        }
+
+        // Function to fetch unique test ID from the server or from local storage
+async function fetchUniqueTestID() {
+    // Check if there's a test ID in local storage
+    const storedTestID = localStorage.getItem('test_id');
+    
+    if (storedTestID) {
+        // If found, return it and update the UI
+        testID = storedTestID;
+        document.getElementById('test-id').innerText = testID;
+        console.log('Test ID retrieved from local storage:', testID);
+        return;
+    }
+
+    // If not found, fetch a new one from the server
+    return fetch('store_test_id.php', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        testID = data.test_id;
+        document.getElementById('test-id').innerText = testID;
+        localStorage.setItem('test_id', testID); // Store in local storage
+        console.log('Test ID fetched:', testID);
+    })
+    .catch(error => {
+        console.error('Error fetching test ID:', error);
+    });
+}
+
+
+            startBtn.style.display = 'none'; 
+            inputBox.disabled = false;
+            inputBox.focus(); 
