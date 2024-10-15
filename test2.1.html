@@ -16,6 +16,18 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            position: relative; /* Allow positioning of child elements */
+        }
+
+        #test-id {
+            position: absolute; /* Position it in the top left */
+            top: 20px;
+            left: 20px;
+            font-size: 1.2em;
+            color: #00e6e6; /* Optional: Set color for better visibility */
+            background-color: rgba(30, 30, 30, 0.7); /* Optional: Semi-transparent background */
+            padding: 5px;
+            border-radius: 5px; /* Optional: Rounded corners */
         }
 
         h1 {
@@ -125,21 +137,6 @@
             background-color: #00b3b3;
         }
 
-        /* Result Table */
-        .result-table {
-            margin-top: 20px;
-            font-size: 1.2em;
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-            color: #f0f0f0;
-        }
-
-        .result-table th, .result-table td {
-            padding: 10px;
-            border: 1px solid #555;
-        }
-
         .hidden {
             display: none;
         }
@@ -158,69 +155,50 @@
     </style>
 </head>
 <body>
+    <div id="test-id">Loading UID...</div> <!-- New div for displaying test ID -->
     <div>
-    <h1>Stage 2 of Testing</h1>
-
-    <div class="container">
-        <!-- Left section: Alphabet grid -->
-        <div class="left-section">
-            <div class="alphabet-grid">
-                <div>A<br>1</div>
-                <div>B<br>2</div>
-                <div>C<br>3</div>
-                <div>D<br>4</div>
-                <div>E<br>5</div>
-                <div>F<br>6</div>
-                <div>G<br>7</div>
-                <div>H<br>8</div>
-                <div>I<br>9</div>
-                <div>J<br>10</div>
-                <div>K<br>11</div>
-                <div>L<br>12</div>
-                <div>M<br>13</div>
-                <div>N<br>14</div>
-                <div>O<br>15</div>
-                <div>P<br>16</div>
-                <div>Q<br>17</div>
-                <div>R<br>18</div>
-                <div>S<br>19</div>
-                <div>T<br>20</div>
-                <div>U<br>21</div>
-                <div>V<br>22</div>
-                <div>W<br>23</div>
-                <div>X<br>24</div>
-                <div>Y<br>25</div>
-                <div>Z<br>26</div>
+        <h1>Stage 2 of Testing</h1>
+        <div class="container">
+            <!-- Left section: Alphabet grid -->
+            <div class="left-section">
+                <div class="alphabet-grid">
+                    <div>A<br>1</div>
+                    <div>B<br>2</div>
+                    <div>C<br>3</div>
+                    <div>D<br>4</div>
+                    <div>E<br>5</div>
+                    <div>F<br>6</div>
+                    <div>G<br>7</div>
+                    <div>H<br>8</div>
+                    <div>I<br>9</div>
+                    <div>J<br>10</div>
+                    <div>K<br>11</div>
+                    <div>L<br>12</div>
+                    <div>M<br>13</div>
+                    <div>N<br>14</div>
+                    <div>O<br>15</div>
+                    <div>P<br>16</div>
+                    <div>Q<br>17</div>
+                    <div>R<br>18</div>
+                    <div>S<br>19</div>
+                    <div>T<br>20</div>
+                    <div>U<br>21</div>
+                    <div>V<br>22</div>
+                    <div>W<br>23</div>
+                    <div>X<br>24</div>
+                    <div>Y<br>25</div>
+                    <div>Z<br>26</div>
+                </div>
             </div>
-        </div>
 
-        <!-- Right section: Timer, Current Number, Input, and Results -->
-        <div class="right-section">
-            <div class="timer" id="timer">00:10</div>
-            <div class="current-number" id="currentNumber">Watch here Carefully</div>
-            <input type="text" id="inputField" placeholder="Enter the corresponding alphabet..." maxlength="1">
-            <button onclick="startTest()">Start Test</button>
-
-            <!-- Table to display results -->
-            <table class="result-table hidden" id="resultTable">
-                <thead>
-                    <tr>
-                        <th>Round</th>
-                        <th>Correct Answer</th>
-                        <th>Your Answer</th>
-                        <th>Result</th>
-                    </tr>
-                </thead>
-                <tbody id="resultBody">
-                    <!-- Results will be appended here -->
-                </tbody>
-            </table>
-
-            <!-- Download button -->
-            <button class="hidden" id="downloadBtn" onclick="downloadResults()">Download Results</button>
-
-            <!-- Go to Test 3 button -->
-            <button class="hidden" id="goToTest3Btn" onclick="goToNextTest()">Go to Test 3</button>
+            <!-- Right section: Timer, Current Number, Input, and Results -->
+            <div class="right-section">
+                <div class="timer" id="timer">00:10</div>
+                <div class="current-number" id="currentNumber">Watch here Carefully</div>
+                <input type="text" id="inputField" placeholder="Enter the corresponding alphabet..." maxlength="1">
+                <button onclick="startTest()">Start Test</button>
+                <button class="hidden" id="submitBtn" onclick="submitResults()">Submit Results</button>
+                <button class="hidden" id="goToTest3Btn" onclick="goToNextTest()">Go to Test 3</button>
             </div>
         </div>
     </div>
@@ -229,14 +207,36 @@
         let timeLeft = 10;
         let timer;
         let correctAnswers = 0;
+        let wrongAnswers = 0;
         let attempts = 0;
         const totalRounds = 50;
         let currentRandomNumber;
-        const results = []; // To store results
         const alphabetMap = {
             1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H', 9: 'I',
             10: 'J', 11: 'K', 12: 'L', 13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q',
             18: 'R', 19: 'S', 20: 'T', 21: 'U', 22: 'V', 23: 'W', 24: 'X', 25: 'Y', 26: 'Z'
+        };
+        let testID; // Variable to store the test ID
+        // Other variables...
+
+        function retrieveLastTestID() {
+            fetch('get_test_id.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.test_id) {
+                        testID = data.test_id;
+                        document.getElementById('test-id').innerText = testID;
+                    } else {
+                        console.error("No test ID found.");
+                    }
+                })
+                .catch(error => console.error('Error retrieving test ID:', error));
+        }
+
+        // Call this function when the page loads
+        window.onload = function() {
+            retrieveLastTestID();
+            // Any other initialization code...
         };
 
         function nextRound() {
@@ -248,17 +248,14 @@
                 document.getElementById('inputField').focus(); // Focus on the input field
                 startTimer();
             } else {
-                showResults();
+                document.getElementById('submitBtn').classList.remove('hidden'); // Show submit button
             }
         }
 
         function startTest() {
             correctAnswers = 0;
-            attempts = 0;
-            results.length = 0; // Reset results array
-            document.getElementById('resultTable').classList.add('hidden'); // Hide results table
-            document.getElementById('downloadBtn').classList.add('hidden'); // Hide download button
-            document.getElementById('goToTest3Btn').classList.add('hidden'); // Hide "Go to Test 3" button
+            wrongAnswers = 0;
+            attempts = 0; 
             nextRound(); // Start first round
         }
 
@@ -279,52 +276,49 @@
             clearInterval(timer); // Stop timer when input is given
             const userAnswer = e.target.value.toUpperCase();
             const correctAnswer = alphabetMap[currentRandomNumber];
-            const result = (userAnswer === correctAnswer) ? "Correct" : "Incorrect";
 
-            results.push({
-                round: attempts,
-                correctAnswer: correctAnswer,
-                userAnswer: userAnswer,
-                result: result
-            });
+            if (userAnswer === correctAnswer) {
+                correctAnswers++;
+            } else {
+                wrongAnswers++;
+            }
 
             nextRound(); // Go to next round after input
         });
 
-        function showResults() {
-            const resultBody = document.getElementById('resultBody');
-            resultBody.innerHTML = ''; // Clear previous results
-            results.forEach(result => {
-                const row = `<tr>
-                    <td>${result.round}</td>
-                    <td>${result.correctAnswer}</td>
-                    <td>${result.userAnswer}</td>
-                    <td>${result.result}</td>
-                </tr>`;
-                resultBody.innerHTML += row;
-            });
-            document.getElementById('resultTable').classList.remove('hidden'); // Show results table
-            document.getElementById('downloadBtn').classList.remove('hidden'); // Show download button
-            document.getElementById('goToTest3Btn').classList.remove('hidden'); // Show "Go to Test 3" button
-        }
+        function submitResults() {
+    const totalCount = correctAnswers + wrongAnswers;
+    const data = {
+        "entry.123456789": totalCount,      // Replace with your total count entry ID
+        "entry.987654321": correctAnswers,    // Replace with your correct answers entry ID
+        "entry.456789123": wrongAnswers,      // Replace with your wrong answers entry ID
+    };
 
-        function downloadResults() {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Round,Correct Answer,Your Answer,Result\n";
-            results.forEach(result => {
-                csvContent += `${result.round},${result.correctAnswer},${result.userAnswer},${result.result}\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "alphabet_test_results.csv");
-            document.body.appendChild(link); // Required for Firefox
-            link.click();
-        }
+    // URL to your Google Forms endpoint here
+    const googleFormURL = "https://docs.google.com/forms/d/e/1FAIpQLSf5bamUqACjK0H3zgXlmY07wAUXM0Q0TF-pd93DAfxtZUp3Jw/formResponse"; // Replace with your actual Google Form URL
 
-        function goToNextTest() {
-            window.location.href = "test3.html"; // Assuming test3.html exists
-        }
+    // Convert data to a query string
+    const queryString = Object.keys(data)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+        .join('&');
+
+    // Send data to Google Forms
+    fetch(googleFormURL + '?' + queryString)
+        .then(response => {
+            if (response.ok) {
+                alert('Results submitted successfully!');
+                // Optionally redirect to the next test
+                document.getElementById('goToTest3Btn').classList.remove('hidden');
+            } else {
+                alert('There was an error submitting your results.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error submitting your results.');
+        });
+}
+
     </script>
 </body>
 </html>

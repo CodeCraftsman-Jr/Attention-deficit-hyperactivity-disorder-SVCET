@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet Test</title>
+    <style>
+        /* Base Styles */
+        body {
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #00e6e6;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #2e2e2e;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .timer {
+            font-size: 4em;
+            margin: 20px 0;
+            color: #00e6e6;
+        }
+
+        input[type="text"] {
+            font-size: 1.5em;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            background-color: #333;
+            color: #f0f0f0;
+            outline: none;
+        }
+
+        button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #00e6e6;
+            color: black;
+            border-radius: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Alphabet Test</h1>
+        <div class="timer" id="timer">00:10</div>
+        <input type="text" id="inputField" placeholder="Enter the corresponding alphabet..." maxlength="1">
+        <button onclick="startTest()">Start Test</button>
+
+        <!-- Form to submit results to Google Forms -->
+        <form id="gform" action="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/formResponse" method="POST" class="hidden">
+            <input type="text" name="entry.FIELD_ID_FOR_ROUND" id="round" hidden>
+            <input type="text" name="entry.FIELD_ID_FOR_CORRECT" id="correctAnswers" hidden>
+            <input type="text" name="entry.FIELD_ID_FOR_USER" id="userAnswers" hidden>
+            <input type="text" name="entry.FIELD_ID_FOR_RESULT" id="results" hidden>
+            <button type="submit">Submit Results</button>
+        </form>
+    </div>
+
+    <script>
+        let timeLeft = 10;
+        let timer;
+        let attempts = 0;
+        const totalRounds = 50;
+        let currentRandomNumber;
+        const results = [];
+        const alphabetMap = {
+            1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H', 9: 'I',
+            10: 'J', 11: 'K', 12: 'L', 13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q',
+            18: 'R', 19: 'S', 20: 'T', 21: 'U', 22: 'V', 23: 'W', 24: 'X', 25: 'Y', 26: 'Z'
+        };
+
+        function startTest() {
+            attempts = 0;
+            results.length = 0; // Reset results array
+            nextRound(); // Start first round
+        }
+
+        function nextRound() {
+            if (attempts < totalRounds) {
+                attempts++;
+                currentRandomNumber = Math.floor(Math.random() * 26) + 1;
+                document.getElementById('timer').textContent = currentRandomNumber;
+                document.getElementById('inputField').value = ''; // Reset input field
+                document.getElementById('inputField').focus(); // Focus on the input field
+                startTimer();
+            } else {
+                showResults();
+            }
+        }
+
+        function startTimer() {
+            timeLeft = 10; // Reset to 10 seconds for each round
+            document.getElementById('timer').textContent = "00:" + (timeLeft < 10 ? "0" + timeLeft : timeLeft);
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = "00:" + (timeLeft < 10 ? "0" + timeLeft : timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    nextRound();
+                }
+            }, 1000);
+        }
+
+        document.getElementById('inputField').addEventListener('input', function (e) {
+            clearInterval(timer); // Stop timer when input is given
+            const userAnswer = e.target.value.toUpperCase();
+            const correctAnswer = alphabetMap[currentRandomNumber];
+            const result = (userAnswer === correctAnswer) ? "Correct" : "Incorrect";
+
+            results.push({
+                round: attempts,
+                correctAnswer: correctAnswer,
+                userAnswer: userAnswer,
+                result: result
+            });
+
+            nextRound(); // Go to next round after input
+        });
+
+        function showResults() {
+            const form = document.getElementById('gform');
+            let roundData = '', correctData = '', userData = '', resultData = '';
+
+            results.forEach((res) => {
+                roundData += `${res.round}, `;
+                correctData += `${res.correctAnswer}, `;
+                userData += `${res.userAnswer}, `;
+                resultData += `${res.result}, `;
+            });
+
+            document.getElementById('round').value = roundData.trim();
+            document.getElementById('correctAnswers').value = correctData.trim();
+            document.getElementById('userAnswers').value = userData.trim();
+            document.getElementById('results').value = resultData.trim();
+
+            form.classList.remove('hidden'); // Show the Google Forms submit button
+        }
+    </script>
+</body>
+</html>
