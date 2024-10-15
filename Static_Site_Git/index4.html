@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(3, 150px); /* Increased size */
+            gap: 20px; /* Increased gap */
+            justify-content: center;
+            margin-top: 50px;
+            display: none; /* Hide grid initially */
+        }
+        .color-box {
+            width: 150px; /* Increased size */
+            height: 150px; /* Increased size */
+            border: 4px solid black; /* Larger border */
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; /* Smooth pop-out and shadow effect */
+        }
+        .color-box:hover {
+            transform: scale(1.2); /* Pop-out effect on hover */
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.5); /* Shadow effect */
+        }
+        .color-box:active {
+            background-color: #ffffff; /* Change to white when clicked */
+            transition: background-color 0.1s; /* Flash effect */
+        }
+        #timer {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        #popup {
+            display: none; /* Hide popup initially */
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
+        }
+        button {
+            font-size: 16px;
+            padding: 12px 24px;
+            margin-top: 20px;
+            background-color: #28a745; /* Cool green background */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: scale(1.1); /* Pop-out effect */
+        }
+        button:active {
+            background-color: #1e7e34; /* Even darker green when clicked */
+        }
+        button#downloadBtn {
+            background-color: #007bff; /* Blue background for download button */
+        }
+        button#downloadBtn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Color Click Test</h1>
+
+<button id="startButton">Start Test</button>
+
+<div id="grid">
+    <div id="green" class="color-box" style="background-color: green;"></div>
+    <div id="red" class="color-box" style="background-color: red;"></div>
+    <div id="yellow" class="color-box" style="background-color: yellow;"></div>
+    <div id="violet" class="color-box" style="background-color: violet;"></div>
+    <div id="blue" class="color-box" style="background-color: blue;"></div>
+    <div id="orange" class="color-box" style="background-color: orange;"></div>
+</div>
+
+<div id="timer">Time left: 60s</div>
+
+<div id="popup">
+    <h2>Test Results</h2>
+    <table border="1" style="margin: 0 auto;">
+        <tr>
+            <th>Correct</th>
+            <th>Incorrect</th>
+        </tr>
+        <tr>
+            <td id="correctCount">0</td>
+            <td id="incorrectCount">0</td>
+        </tr>
+    </table>
+    <button id="downloadBtn">Download Results</button>
+    <br><br>
+    <button onclick="window.location.href = 'home.html';">Go to Home Page</button>
+    <button onclick="window.location.href = 'userdetail.html';">Next Test</button>
+</div>
+
+<!-- Click Sound -->
+<audio id="clickSound">
+    <source src="https://www.soundjay.com/button/sounds/button-16.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const colors = ['green', 'red', 'yellow', 'violet', 'blue', 'orange'];
+    let scoreCorrect = 0;
+    let scoreIncorrect = 0;
+    let totalTime = 60;
+    let timerInterval;
+    let currentColor;
+    let gameStarted = false;
+    let voiceInterval;
+    let colorShuffleInterval;
+    let synth = window.speechSynthesis;
+
+    const startButton = document.getElementById('startButton');
+    const grid = document.getElementById('grid');
+    const popup = document.getElementById('popup');
+    const timer = document.getElementById('timer');
+    const correctCount = document.getElementById('correctCount');
+    const incorrectCount = document.getElementById('incorrectCount');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const clickSound = document.getElementById('clickSound');
+
+    // Start game when the button is pressed
+    startButton.addEventListener('click', () => {
+        startButton.style.display = 'none';  // Hide the start button
+        grid.style.display = 'grid';  // Show the grid
+        startGame();
+    });
+
+    function startGame() {
+        gameStarted = true;
+
+        // Start timer
+        timerInterval = setInterval(() => {
+            totalTime--;
+            timer.innerText = `Time left: ${totalTime}s`;
+            if (totalTime === 0) {
+                clearInterval(timerInterval);
+                endGame();
+            }
+        }, 1000);
+
+        // Shuffle colors every 2 seconds
+        colorShuffleInterval = setInterval(shuffleColors, 2000);
+
+        // Play random color every 2 seconds
+        voiceInterval = setInterval(playRandomColor, 2000);
+    }
+
+    // Function to shuffle the colors and update the boxes
+    function shuffleColors() {
+        // Shuffle the colors array
+        const shuffledColors = colors.sort(() => Math.random() - 0.5);
+
+        // Get all color-box elements and apply the shuffled colors
+        const colorBoxes = document.querySelectorAll('.color-box');
+        colorBoxes.forEach((box, index) => {
+            box.style.backgroundColor = shuffledColors[index];
+            box.id = shuffledColors[index]; // Update the id to match the new color
+        });
+    }
+
+    // Function to play a random color sound
+    function playRandomColor() {
+        currentColor = colors[Math.floor(Math.random() * colors.length)];
+        const utterance = new SpeechSynthesisUtterance(currentColor);
+        synth.speak(utterance);
+    }
+
+    // Function to check the clicked color
+    document.querySelectorAll('.color-box').forEach(box => {
+        box.addEventListener('click', (e) => {
+            if (!gameStarted) return;
+
+            // Play click sound
+            clickSound.play();
+
+            const clickedColor = e.target.id;
+            if (clickedColor === currentColor) {
+                scoreCorrect++;
+            } else {
+                scoreIncorrect++;
+            }
+        });
+    });
+
+    // Function to end the game
+    // Function to end the game and send results to the server
+function endGame() {
+    gameStarted = false;
+    grid.style.display = 'none';  // Hide the grid
+    popup.style.display = 'block';  // Show the results popup
+
+    // Stop the color announcement and shuffling
+    clearInterval(voiceInterval);
+    clearInterval(colorShuffleInterval);
+    synth.cancel();  // Immediately stop any ongoing speech
+
+    // Update the results table
+    correctCount.innerText = scoreCorrect;
+    incorrectCount.innerText = scoreIncorrect;
+
+    // Send results to the server
+    sendResultsToServer(scoreCorrect, scoreIncorrect);
+}
+
+// Function to send test results to the server using AJAX
+function sendResultsToServer(correct, incorrect) {
+    const personNumber = prompt("Enter your person number:", "1");
+
+    if (personNumber != null) {
+        const formData = new FormData();
+        formData.append('person', personNumber);
+        formData.append('correct', correct);
+        formData.append('incorrect', incorrect);
+
+        // Send the data to the PHP script via AJAX
+        fetch('save_to_excel.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert("Results saved to Excel.");
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+
+</script>
+
+</body>
+</html>

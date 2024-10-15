@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #282c34;
+            color: white;
+        }
+        #letter-box {
+            font-size: 48px;
+            margin: 20px;
+        }
+        #timer {
+            font-size: 36px;
+        }
+        #input-box {
+            font-size: 24px;
+            padding: 10px;
+        }
+        #start-btn, #next-page-btn, #download-btn {
+            padding: 10px 20px;
+            font-size: 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #next-page-btn, #download-btn {
+            display: none; /* Hide initially */
+        }
+        #b-stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="b-stats">
+        <p>Unique Test ID: <span id="test-id"></span></p>
+        <p>Number of times 'B' appeared: <span id="b-count">0</span></p>
+        <p>Correct 'B' inputs: <span id="b-correct">0</span></p>
+        <p>Missed 'B' inputs: <span id="b-missed">0</span></p>
+        <p>Wrong keys pressed: <span id="wrong-keys">0</span></p>
+    </div>
+    <div id="timer">45</div>
+    <div id="letter-box">Letter will appear here</div>
+    <input id="input-box" type="text" disabled>
+    <button id="start-btn">Start Test</button>
+    <button id="next-page-btn" onclick="window.location.href='Phase3.html'">Continue Test</button>
+
+    <!-- Submit Form -->
+    <form id="submit-form" onsubmit="submitResultsToGoogleForm(); return false;">
+    </form>
+
+    <script>
+        let timeLeft = 45;
+        let inputCount = 0; // Track the number of inputs
+        const maxInputs = 40; // Maximum allowed inputs
+        const letters = ['P', 'B', 'D', 'Q', 'R'];
+        let lastLetter = '';
+        let bAppeared = 0; // Track how many times 'B' appears
+        let bCorrect = 0; // Track how many times 'B' was correctly input by the user
+        let bMissed = 0; // Track how many times 'B' was missed or incorrectly input
+        let wrongKeyCount = 0; // Track how many wrong keys are pressed
+        let currentLetter = ''; // Track the current letter displayed
+        const letterChangeInterval = 560; // Fixed interval for letter changes (in milliseconds)
+        let countdown;
+        let letterChange; // For letter interval
+        let nextPageButtonVisible = false; // Flag to track if the next page button is visible
+        let testID; // To hold the unique test ID
+
+        // Retrieve the test ID from localStorage
+        testID = localStorage.getItem('testID');
+
+        // If a test ID is found, display it
+        if (testID) {
+            document.getElementById('test-id').innerText = testID;
+        } else {
+            console.error("No test ID found.");
+        }
+
+        // HTML elements
+        let timerElement = document.getElementById('timer');
+        let letterBox = document.getElementById('letter-box');
+        let inputBox = document.getElementById('input-box');
+        let bStatsElement = document.getElementById('b-stats');
+        let startBtn = document.getElementById('start-btn');
+        let nextPageBtn = document.getElementById('next-page-btn');
+        let downloadBtn = document.getElementById('download-btn');
+
+        // Function to start the test
+        function startTest() {
+            startBtn.style.display = 'none'; // Hide the start button
+            inputBox.disabled = false; // Enable input
+            inputBox.focus(); // Auto-focus input box
+
+    
+            // Store the test ID in localStorage so it can be retrieved later
+            localStorage.setItem('testID', testID);
+
+            // Start countdown
+            countdown = setInterval(() => {
+                if (timeLeft <= 0 || inputCount >= maxInputs) {
+                    clearInterval(countdown);
+                    clearInterval(letterChange);
+                    inputBox.disabled = true; // Disable input after time's up or inputs complete
+                    submitResultsToGoogleForm(); // Submit results to Google Form
+                    showNextPageButton(); // Show button to go to next page
+                    downloadBtn.style.display = 'block'; // Show the download button
+                } else {
+                    timerElement.textContent = timeLeft;
+                    timeLeft--;
+                }
+            }, 1000);
+
+            // Start showing letters
+            letterChange = setInterval(() => {
+                if (timeLeft > 0 && inputCount < maxInputs) {
+                    letterBox.textContent = getNextLetter();
+                }
+            }, letterChangeInterval);
+        }
+
+        // Function to get the next letter
+        function getNextLetter() {
+            let newLetter;
+
+            if (bAppeared < 40) {
+                // Ensure 'B' is shown
+                if (lastLetter !== 'B') {
+                    newLetter = 'B';
+                    bAppeared++; // Increment 'B' appearance count
+                } else {
+                    do {
+                        newLetter = letters[Math.floor(Math.random() * letters.length)];
+                    } while (newLetter === lastLetter || newLetter === 'B');
+                }
+            } else {
+                // Once 'B' is shown 40 times, use random letters
+                do {
+                    newLetter = letters[Math.floor(Math.random() * letters.length)];
+                } while (newLetter === lastLetter);
+            }
+
+            // Update the last letter
+            lastLetter = newLetter;
+            currentLetter = newLetter; // Keep track of the current letter
+            updateBStats(); // Update the real-time tracking window
+            return newLetter;
+        }
+
+        // Input event listener (capture on keystroke)
+        inputBox.addEventListener('input', (event) => {
+            if (inputCount < maxInputs && timeLeft > 0) {
+                const userInput = event.target.value.toUpperCase();
+
+                if (userInput === currentLetter) {
+                    if (currentLetter === 'B') {
+                        bCorrect++; // Increment correct 'B' input count
+                    }
+                } else {
+                    if (currentLetter === 'B') {
+                        bMissed++; // Increment missed 'B' count
+                    } else {
+                        wrongKeyCount++; // Increment wrong keys pressed
+                    }
+                }
+
+                inputCount++; // Increment input count
+                event.target.value = ''; // Clear the input field
+                updateBStats(); // Update the real-time tracking window
+            }
+        });
+
+        // Function to update the statistics display
+        function updateBStats() {
+            document.getElementById('b-count').innerText = bAppeared;
+            document.getElementById('b-correct').innerText = bCorrect;
+            document.getElementById('b-missed').innerText = bMissed;
+            document.getElementById('wrong-keys').innerText = wrongKeyCount;
+        }
+
+        // Show next page button
+        function showNextPageButton() {
+            nextPageBtn.style.display = 'block'; // Show the next page button
+        }
+
+        // Function to submit results to Google Form
+        function submitResultsToGoogleForm() {
+            const formURL = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSc7nOlCfCPuQK5IYxJIQgcU95IGD_3oByk-j5zfbyiT0p39pA/formResponse'; // Google Form URL
+            const data = {
+                'entry.382799424': testID, // Unique Test ID
+                'entry.599379425': bAppeared, // 'B' appeared count
+                'entry.1447226105': bCorrect, // Correct 'B' inputs
+                'entry.1331843799': bMissed, // Missed 'B' inputs
+                'entry.1168723483': wrongKeyCount // Wrong keys pressed
+            };
+            alert("Submitted Successfully")
+
+            const params = new URLSearchParams(data).toString();
+
+            fetch(formURL, {
+                method: 'POST',
+                body: params,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Results submitted successfully');
+                } else {
+                    console.error('Error submitting results:', response.statusText);
+                }
+            }).catch(error => console.error('Fetch error:', error));
+        }
+
+        // Add event listener to start the test when the start button is clicked
+        startBtn.addEventListener('click', startTest);
+    </script>
+</body>
+</html>
