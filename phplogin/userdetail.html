@@ -16,7 +16,7 @@
             justify-content: center;
             align-items: flex-start;
             height: 100vh;
-            overflow-y: auto; /* Enable vertical scrolling if needed */
+            overflow-y: auto;
         }
 
         /* Container for form */
@@ -26,7 +26,7 @@
             padding: 40px;
             max-width: 600px;
             width: 90%;
-            margin: 20px auto; /* Ensure form stays centered and allows space for scrolling */
+            margin: 20px auto;
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -55,7 +55,6 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* Input fields and dropdown */
         .form-group input, .form-group select {
             width: 100%;
             padding: 15px;
@@ -72,7 +71,6 @@
             border-color: #00FFFF;
         }
 
-        /* Button styles */
         button {
             width: 100%;
             padding: 15px;
@@ -93,12 +91,11 @@
             box-shadow: 0px 0px 20px rgba(0, 255, 255, 0.6);
         }
 
-        #downloadBtn {
+        #nextPageBtn {
             display: none;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
-        /* Success message */
         p.success-message {
             color: #00FF00;
             text-align: center;
@@ -106,31 +103,6 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* Glowing Input effect */
-        .form-group input:focus::placeholder {
-            color: rgba(0, 255, 255, 0.6);
-        }
-
-        /* Neon effect for label text */
-        .form-group label::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: #00FFFF;
-            visibility: hidden;
-            transform: scaleX(0);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .form-group label:hover::before {
-            visibility: visible;
-            transform: scaleX(1);
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -152,10 +124,6 @@
                 margin-bottom: 20px;
             }
 
-            .form-group label {
-                font-size: 1em;
-            }
-
             .form-group input, .form-group select {
                 padding: 10px;
                 font-size: 1em;
@@ -167,30 +135,29 @@
             }
         }
 
-        /* Font Import for futuristic design */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Patient Details </h2>
+    <h2>Patient Details</h2>
     <form id="userForm">
         <div class="form-group">
             <label for="uid">UID :</label>
-            <input type="text" id="uid" name="uid" readonly>
+            <input type="text" id="uid" name="entry.1946159259" readonly>
         </div>
         <div class="form-group">
             <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" placeholder="Enter your first name..." required>
+            <input type="text" id="firstName" name="entry.548217985" placeholder="Enter your first name..." required>
         </div>
         <div class="form-group">
             <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" placeholder="Enter your last name..." required>
+            <input type="text" id="lastName" name="entry.1939270885" placeholder="Enter your last name..." required>
         </div>
         <div class="form-group">
             <label for="gender">Gender:</label>
-            <select id="gender" name="gender" required>
+            <select id="gender" name="entry.878875172" required>
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -199,15 +166,15 @@
         </div>
         <div class="form-group">
             <label for="dob">Date of Birth:</label>
-            <input type="date" id="dob" name="dob" required>
+            <input type="date" id="dob" name="entry.1758619677" required>
         </div>
         <div class="form-group">
             <label for="assessmentDate">Date of Assessment:</label>
-            <input type="date" id="assessmentDate" name="assessmentDate" required>
+            <input type="date" id="assessmentDate" name="entry.1517301426" required>
         </div>
         <button type="submit">Submit</button>
-        <button type="button" id="downloadBtn" onclick="downloadExcel()">Download Excel</button>
         <p class="success-message" id="successMessage"></p>
+        <button id="nextPageBtn" onclick="goToNextPage()">Next Page</button>
     </form>
 </div>
 
@@ -220,51 +187,37 @@
     // Set UID on page load
     document.getElementById('uid').value = generateUID();
 
-    // Handle form submission
-    const form = document.getElementById('userForm');
-    const successMessage = document.getElementById('successMessage');
-    const downloadBtn = document.getElementById('downloadBtn');
-    let userData = [];
-
-    form.addEventListener('submit', function (e) {
+    // Handle form submission via AJAX
+    document.getElementById('userForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // Collect form data
-        const uid = document.getElementById('uid').value;
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        const gender = document.getElementById('gender').value;
-        const dob = document.getElementById('dob').value;
-        const assessmentDate = document.getElementById('assessmentDate').value;
+        const form = document.getElementById('userForm');
+        const formData = new FormData(form);
+        
+        // AJAX request to Google Form
+        fetch('https://docs.google.com/forms/d/e/1FAIpQLSfiHC5o2YLQLpZrAiMlSlW953aRIvqTCU7lblvNrRd4GADesg/formResponse', {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors', // Handle CORS issues for Google Forms
+        }).then(() => {
+            alert("Submitted successfully!");
 
-        // Append data to userData array
-        userData.push([uid, firstName, lastName, gender, dob, assessmentDate]);
+            // Show success message and next page button
+            document.getElementById('successMessage').textContent = "Details submitted successfully!";
+            document.getElementById('nextPageBtn').style.display = 'block';
 
-        // Show success message
-        successMessage.textContent = "Details submitted successfully!";
-        downloadBtn.style.display = "inline-block";
-
-        // Clear form fields
-        form.reset();
-        document.getElementById('uid').value = generateUID(); // Generate new UID for the next entry
+            // Clear the form and regenerate UID
+            form.reset();
+            document.getElementById('uid').value = generateUID();
+        }).catch(error => {
+            console.error("Error:", error);
+            alert("There was an error submitting the form. Please try again.");
+        });
     });
 
-    // Download Excel (CSV) function
-    function downloadExcel() {
-        let csvContent = "data:text/csv;charset=utf-8,UID,First Name,Last Name,Gender,DOB,Date of Assessment\n";
-        userData.forEach(function(rowArray) {
-            let row = rowArray.join(",");
-            csvContent += row + "\n";
-        });
-
-        // Create a download link
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "user_details.csv");
-
-        // Trigger download
-        link.click();
+    // Go to the next page
+    function goToNextPage() {
+        window.location.href = "nextpage.html"; // Replace with the URL of the next page
     }
 </script>
 
