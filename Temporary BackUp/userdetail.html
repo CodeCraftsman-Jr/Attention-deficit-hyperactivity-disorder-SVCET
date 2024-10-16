@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient details</title>
+    <style>
+        /* Background settings for futuristic look */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Container for form */
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            margin: 20px auto;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #00FFFF;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #00FFFF;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            background: transparent;
+            color: rgb(255, 255, 255);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #00FFFF;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            color: #00FFFF;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00FFFF;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00FFFF;
+            color: #000;
+            box-shadow: 0px 0px 20px rgba(0, 255, 255, 0.6);
+        }
+
+        #nextPageBtn {
+            display: none;
+            margin-top: 20px;
+        }
+
+        p.success-message {
+            color: #00FF00;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                max-width: 90%;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            button {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+
+            .form-group input, .form-group select {
+                padding: 10px;
+                font-size: 1em;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Patient Details</h2>
+    <form id="userForm">
+        <div class="form-group">
+            <label for="uid">UID :</label>
+            <input type="text" id="uid" name="entry.1946159259" readonly>
+        </div>
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="entry.548217985" placeholder="Enter your first name..." required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="entry.1939270885" placeholder="Enter your last name..." required>
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="entry.878875172" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="entry.1758619677" required>
+        </div>
+        <div class="form-group">
+            <label for="assessmentDate">Date of Assessment:</label>
+            <input type="date" id="assessmentDate" name="entry.1517301426" required>
+        </div>
+        <button type="submit">Submit</button>
+        <p class="success-message" id="successMessage"></p>
+        <button id="nextPageBtn" onclick="goToNextPage()">Next Page</button>
+    </form>
+</div>
+
+<script>
+    // Generate a 6-digit UID
+    function generateUID() {
+        return Math.floor(100000 + Math.random() * 900000);
+    }
+
+    // Set UID on page load
+    document.getElementById('uid').value = generateUID();
+
+    // Handle form submission via AJAX
+    document.getElementById('userForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const form = document.getElementById('userForm');
+        const formData = new FormData(form);
+        
+        // AJAX request to Google Form
+        fetch('https://docs.google.com/forms/d/e/1FAIpQLSfiHC5o2YLQLpZrAiMlSlW953aRIvqTCU7lblvNrRd4GADesg/formResponse', {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors', // Handle CORS issues for Google Forms
+        }).then(() => {
+            alert("Submitted successfully!");
+
+            // Show success message and next page button
+            document.getElementById('successMessage').textContent = "Details submitted successfully!";
+            document.getElementById('nextPageBtn').style.display = 'block';
+
+            // Clear the form and regenerate UID
+            form.reset();
+            document.getElementById('uid').value = generateUID();
+        }).catch(error => {
+            console.error("Error:", error);
+            alert("There was an error submitting the form. Please try again.");
+        });
+    });
+
+    // Go to the next page
+    function goToNextPage() {
+        window.location.href = "nextpage.html"; // Replace with the URL of the next page
+    }
+</script>
+
+</body>
+</html>

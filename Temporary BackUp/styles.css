@@ -1,0 +1,235 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    
+}
+
+/* Header */
+header {
+    background: #f8f8f8;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: rgb(255, 255, 255);
+}
+
+header .logo h1 {
+    color: #333;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Hero Section */
+.hero {
+    background: url('https://media.istockphoto.com/id/1327568875/photo/healthcare-business-graph-data-and-growth-insurance-healthcare-doctor-analyzing-medical-of.jpg?s=612x612&w=0&k=20&c=R4idIeTPq0f1TPSJwAq4KUeLUQg6ul8eIBSjvs9MXQk=') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+}
+
+.hero-overlay {
+    background: rgba(7, 7, 7, 0.377);
+    padding: 8rem;
+    border-radius: 8px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn {
+    padding: 10px 20px;
+    background: #00bfff;
+    color: white;
+    text-decoration: none;
+    border-radius: px;
+}
+
+
+/* About Section */
+.about {
+    padding: 4rem 0;
+}
+
+.about-content {
+    display: flex;
+    gap: 2rem;
+}
+
+.about img {
+    width: 75%;
+    border-radius: 8px;
+}
+
+.about-text {
+    width: 50%;
+}
+
+.about-text h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.progress-bars .progress-bar {
+    margin-bottom: 1rem;
+}
+
+.progress-bar label {
+    font-weight: bold;
+}
+
+.progress {
+    height: 10px;
+    background: #00bfff;
+    border-radius: 5px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.stat h3 {
+    color: #00bfff;
+    font-size: 1.5rem;
+}
+
+/* Services Section */
+.services {
+    background: #f4f4f4;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.services h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.service-grid {
+    display: flex;
+    justify-content: space-between;
+}
+
+.service-item {
+    width: 30%;
+    padding: 2rem;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.service-item img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Footer */
+footer {
+    background: #333;
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+/* Top Header Styling */
+.top-header {
+    background: #333;
+    color: #fff;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.top-header .contact-info {
+    display: inline-block;
+}
+
+.top-header .contact-info p {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.top-header .contact-info i {
+    margin-right: 5px;
+}
+
+.top-header .social-media {
+    float: right;
+}
+
+.top-header .social-media a {
+    color: #fff;
+    margin-left: 10px;
+    text-decoration: none;
+}
+
+.top-header .social-media a:hover {
+    color: #00bfff;
+}
+
+.auth-buttons {
+    margin-left: 20px;
+}
+
+.auth-buttons .btn-signin,
+.auth-buttons .btn-signup {
+    padding: 10px 20px;
+    border: 2px solid #00bfff;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.auth-buttons .btn-signin {
+    background-color: transparent;
+    color: #00bfff;
+}
+
+.auth-buttons .btn-signin:hover {
+    background-color: #00bfff;
+    color: white;
+}
+
+.auth-buttons .btn-signup {
+    background-color: #00bfff;
+    color: white;
+}
+
+.auth-buttons .btn-signup:hover {
+    background-color: #008ecf;
+}
+
