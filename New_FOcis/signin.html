@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6f2c91, #ffcc00);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            color: #6f2c91;
+        }
+        .btn-primary {
+            background-color: #ffcc00;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #e6b800;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h3 class="text-center mb-4">Login</h3>
+        <form id="loginForm" action="login.php" method="POST">
+            <div class="mb-3">
+                <label for="user" class="form-label">Username or Email</label>
+                <input type="text" class="form-control" id="user" name="user" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Sign In</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap and JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Display alerts with Bootstrap modals for better visuals
+        function showAlert(message) {
+            const modalHtml = `
+                <div class="modal fade" id="alertModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Alert</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>${message}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="location.reload()">Reload</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modal = new bootstrap.Modal(document.getElementById('alertModal'));
+            modal.show();
+        }
+
+        <?php if (isset($_GET['error'])): ?>
+        showAlert("<?php echo htmlspecialchars($_GET['error']); ?>");
+        <?php endif; ?>
+    </script>
+</body>
+</html>
