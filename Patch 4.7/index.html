@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innov Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background: #f8f8f8;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: rgb(255, 255, 255);
+        }
+
+        header .header-content {
+            display: flex; /* Use flexbox for layout */
+            align-items: center; /* Center align items vertically */
+        }
+
+        header .logo h1 {
+            margin-left: 10px; /* Add space between the logo and the heading */
+            color: #333; /* Change color as needed */
+        }
+
+        nav {
+            display: flex; /* Use flexbox for the nav */
+            align-items: center; /* Center align items vertically */
+            margin-left: auto; /* Pushes the nav items to the right */
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin-left: 20px;
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .auth-buttons {
+            display: flex; /* Use flexbox for the buttons */
+            margin-left: 20px; /* Space between nav items and buttons */
+        }
+
+        .auth-buttons .btn-signin,
+        .auth-buttons .btn-signup {
+            padding: 10px 20px;
+            border: 2px solid #00bfff;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons .btn-signin {
+            background-color: transparent;
+            color: #00bfff;
+        }
+
+        .auth-buttons .btn-signin:hover {
+            background-color: #00bfff;
+            color: white;
+        }
+
+        .auth-buttons .btn-signup {
+            background-color: #00bfff;
+            color: white;
+        }
+
+        .auth-buttons .btn-signup:hover {
+            background-color: #008ecf;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('https://media.istockphoto.com/id/1327568875/photo/healthcare-business-graph-data-and-growth-insurance-healthcare-doctor-analyzing-medical-of.jpg?s=612x612&w=0&k=20&c=R4idIeTPq0f1TPSJwAq4KUeLUQg6ul8eIBSjvs9MXQk=') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-overlay {
+            background: rgba(7, 7, 7, 0.377);
+            padding: 8rem;
+            border-radius: 8px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #00bfff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px; /* Fixed this line */
+        }
+
+        /* About Section */
+        .about {
+            padding: 4rem 0;
+        }
+
+        .about-content {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .about img {
+            width: 75%;
+            border-radius: 8px;
+        }
+
+        .about-text {
+            width: 50%;
+        }
+
+        .about-text h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bars .progress-bar {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar label {
+            font-weight: bold;
+        }
+
+        .progress {
+            height: 10px;
+            background: #00bfff;
+            border-radius: 5px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .stat h3 {
+            color: #00bfff;
+            font-size: 1.5rem;
+        }
+
+        /* Services Section */
+        .services {
+            background: #f4f4f4;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .services h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-grid {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .service-item {
+            width: 30%;
+            padding: 2rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .service-item img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        /* Top Header Styling */
+        .top-header {
+            background: #333;
+            color: #fff;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .top-header .contact-info {
+            display: inline-block;
+        }
+
+        .top-header .contact-info p {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .top-header .contact-info i {
+            margin-right: 5px;
+        }
+
+        .top-header .social-media {
+            float: right;
+        }
+
+        .top-header .social-media a {
+            color: #fff;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        .top-header .social-media a:hover {
+            color: #00bfff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container">
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> +123-456-7890</p>
+                <p><i class="fas fa-envelope"></i> info@dentocare.com</p>
+            </div>
+            <div class="social-media">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header>
+        <div class="container">
+            <div class="header-content"> <!-- Added a wrapper for logo and heading -->
+                <img src="http://assessingattention.great-site.net/images/logo.jpg" alt="Logo" style="height: 60px; width: auto;"> <!-- Add your logo here -->
+                <div class="logo">
+                    <h1>Atten Track</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                    <div class="auth-buttons">
+                        <a href="./signin.html" class="btn-signin">Sign In</a>
+                        <!-- <a href="./Sign_up.html" class="btn-signup">Sign Up</a> -->
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-overlay">
+            <h1>"Strength doesn’t come from what you can do, it comes from overcoming the things you once thought you couldn’t. The body achieves what the mind believes."</h1>
+            <a href="#about" class="btn">Learn More</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <img src="http://assessingattention.great-site.net/images/homeimage1.jpg" alt="About Us">
+                <div class="about-text">
+                    <h2>About Us</h2>
+                    <p>We are dedicated to providing high-quality dental care for all our patients. Our team of experienced professionals is committed to ensuring your comfort and satisfaction.</p>
+                    <div class="progress-bars">
+                        <div class="progress-bar">
+                            <label for="patient-satisfaction">Patient Satisfaction:</label>
+                            <div class="progress" style="width: 85%;"></div>
+                        </div>
+                        <div class="progress-bar">
+                            <label for="success-rate">Success Rate:</label>
+                            <div class="progress" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <h3>500+</h3>
+                            <p>Happy Patients</p>
+                        </div>
+                        <div class="stat">
+                            <h3>100%</h3>
+                            <p>Satisfaction Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="service-grid">
+                <div class="service-item">
+                    <img src="http://assessingattention.great-site.net/images/homeimage2.webp" alt="Teeth Whitening">
+                    <h3>Teeth Whitening</h3>
+                    <p>Brighten your smile with our professional teeth whitening services.</p>
+                </div>
+                <div class="service-item">
+                    <img src="http://assessingattention.great-site.net/images/homeimage3.webp" alt="Dental Implants">
+                    <h3>Dental Implants</h3>
+                    <p>Replace missing teeth with our state-of-the-art dental implant solutions.</p>
+                </div>
+                <div class="service-item">
+                    <img src="http://assessingattention.great-site.net/images/homeimage4.png" alt="Orthodontics">
+                    <h3>Orthodontics</h3>
+                    <p>Achieve a straighter smile with our comprehensive orthodontic treatments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Atten Track. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
