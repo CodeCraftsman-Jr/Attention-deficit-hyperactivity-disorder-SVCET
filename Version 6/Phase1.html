@@ -1,0 +1,218 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+        }
+        #letter-box {
+            font-size: 48px;
+            margin: 20px;
+        }
+        #timer {
+            font-size: 36px;
+        }
+        #input-box {
+            font-size: 24px;
+            padding: 10px;
+        }
+        #start-btn, #next-page-btn, #download-btn {
+            padding: 10px 20px;
+            font-size: 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #next-page-btn, #download-btn {
+            display: none; /* Hide initially */
+        }
+        #p-stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="p-stats">
+        <p>Unique Test ID: <span id="test-id"></span></p>
+        <p>Number of times 'P' appeared: <span id="p-count">0</span></p>
+        <p>Correct 'P' inputs: <span id="p-correct">0</span></p>
+        <p>Missed 'P' inputs: <span id="p-missed">0</span></p>
+        <p>Wrong keys pressed: <span id="wrong-keys">0</span></p>
+    </div>
+    <div id="timer">45</div>
+    <div id="letter-box">Letter will appear here</div>
+    <input id="input-box" type="text" disabled>
+    <button id="start-btn">Start Test</button>
+    <button id="next-page-btn" onclick="window.location.href='Phase2.1.html'">Continue Test</button>
+
+    <script>
+        let timeLeft = 45;
+        let inputCount = 0; 
+        const maxInputs = 40; 
+        const letters = ['P', 'B', 'D', 'Q', 'R'];
+        let lastLetter = '';
+        let pAppeared = 0; 
+        let pCorrect = 0;
+        let pMissed = 0; 
+        let wrongKeyCount = 0;
+        let currentLetter = ''; 
+        const letterChangeInterval = 560; 
+        let countdown;
+        let letterChange; 
+        let testID; 
+
+        let timerElement = document.getElementById('timer');
+        let letterBox = document.getElementById('letter-box');
+        let inputBox = document.getElementById('input-box');
+        let startBtn = document.getElementById('start-btn');
+        let nextPageBtn = document.getElementById('next-page-btn');
+
+        async function fetchUniqueTestID() {
+            return fetch('store_test_id.php', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.test_id) {
+                    testID = data.test_id;
+                    document.getElementById('test-id').innerText = testID;
+                } else {
+                    console.warn("No test ID found.");
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching test ID:', error);
+            });
+        }
+
+        async function startTest() {
+            try {
+                await fetchUniqueTestID(); 
+            } catch (error) {
+                alert('Failed to fetch test ID. Please try again.');
+                return;
+            }
+            startBtn.style.display = 'none'; 
+            inputBox.disabled = false;
+            inputBox.focus(); 
+
+            document.body.style.backgroundColor = 'white';
+            document.body.style.color = 'black'; 
+
+            countdown = setInterval(() => {
+                if (timeLeft <= 0 || inputCount >= maxInputs) {
+                    clearInterval(countdown);
+                    clearInterval(letterChange);
+                    inputBox.disabled = true; 
+                    submitResultsToGoogleForm();
+                    showNextPageButton(); 
+                } else {
+                    timerElement.textContent = timeLeft;
+                    timeLeft--;
+                }
+            }, 1000);
+
+            letterChange = setInterval(() => {
+                if (timeLeft > 0 && inputCount < maxInputs) {
+                    letterBox.textContent = getNextLetter();
+                }
+            }, letterChangeInterval);
+        }
+
+        function getNextLetter() {
+            let newLetter;
+
+            if (pAppeared < 40) {
+                if (lastLetter !== 'P') {
+                    newLetter = 'P';
+                    pAppeared++;
+                } else {
+                    do {
+                        newLetter = letters[Math.floor(Math.random() * letters.length)];
+                    } while (newLetter === lastLetter || newLetter === 'P');
+                }
+            } else {
+                do {
+                    newLetter = letters[Math.floor(Math.random() * letters.length)];
+                } while (newLetter === lastLetter);
+            }
+
+            lastLetter = newLetter;
+            currentLetter = newLetter;
+            updatePStats();
+            return newLetter;
+        }
+
+        inputBox.addEventListener('input', (event) => {
+            if (inputCount < maxInputs && timeLeft > 0) {
+                const userInput = event.target.value.toUpperCase();
+
+                if (userInput === currentLetter) {
+                    if (currentLetter === 'P') {
+                        pCorrect++;
+                    }
+                } else {
+                    if (currentLetter === 'P') {
+                        pMissed++;
+                    } else {
+                        wrongKeyCount++;
+                    }
+                }
+
+                inputCount++;
+                event.target.value = '';
+                updatePStats();
+            }
+        });
+
+        function updatePStats() {
+            document.getElementById('p-count').innerText = pAppeared;
+            document.getElementById('p-correct').innerText = pCorrect;
+            document.getElementById('p-missed').innerText = pMissed;
+            document.getElementById('wrong-keys').innerText = wrongKeyCount;
+        }
+
+        function showNextPageButton() {
+            nextPageBtn.style.display = 'block';
+        }
+
+        function submitResultsToGoogleForm() {
+            const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/formResponse';
+            const data = {
+                'entry.366340186': testID,
+                'entry.1502334890': pAppeared,
+                'entry.606959625': pCorrect,
+                'entry.843480235': pMissed,
+                'entry.717468922': wrongKeyCount
+            };
+
+            const params = new URLSearchParams(data).toString();
+
+            fetch(formURL, {
+                method: 'POST',
+                body: params,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            }).then(() => alert("Submitted Successfully"));
+        }
+
+        startBtn.addEventListener('click', startTest);
+    </script>
+</body>
+</html>

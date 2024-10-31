@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Test Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch; /* Stretch the divisions */
+            max-width: 2000px;
+            width: 100%;
+            gap: 20px;
+        }
+        .division {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+            flex: 1;
+            min-width: 200px;
+            transition: transform 0.3s ease; /* Smooth transition */
+            overflow: hidden; /* Hide overflow */
+            position: relative; /* Set position to relative */
+        }
+        .division img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.3s ease; /* Smooth transition */
+        }
+        .division:hover {
+            transform: scale(1.05); /* Pop up effect */
+        }
+        .division:hover img {
+            transform: scale(1.1); /* Slightly enlarge image on hover */
+        }
+        .start-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition */
+            position: relative; /* Keep the button position relative */
+            z-index: 1; /* Ensure the button is on top */
+        }
+        .start-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column; /* Stack divisions on smaller screens */
+            }
+            .division {
+                margin-bottom: 20px; /* Space between stacked divisions */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Division 1 -->
+        <div class="division">
+            <img src="http://assessingattention.great-site.net/images/starttest.jpg" alt="Test 1 Image">
+            <a href="Phase1.html" class="start-button">Start Test 1</a>
+        </div>
+
+        <!-- Division 2 -->
+        <div class="division">
+            <img src="http://assessingattention.great-site.net/images/starttest.jpg" alt="Test 2 Image">
+            <a href="test2.html" class="start-button">Start Test 2</a>
+        </div>
+
+        <!-- Division 3 -->
+        <div class="division">
+            <img src="http://assessingattention.great-site.net/images/starttest.jpg" alt="Test 3 Image">
+            <a href="test3.html" class="start-button">Start Test 3</a>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Fill Your Details</h2>
+            <p>Click the button below to proceed:</p>
+            <a href="details.html" class="start-button">Fill Details</a>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.createElement("button");
+        btn.innerHTML = "Show Modal";
+        btn.style.display = "none"; // Hide the button
+        document.body.appendChild(btn);
+        
+        // When the user clicks the button, open the modal 
+        window.onload = function() {
+            modal.style.display = "flex"; // Show the modal on page load
+        }
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
