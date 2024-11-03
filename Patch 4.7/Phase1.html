@@ -14,6 +14,7 @@
             height: 100vh;
             background-color: #282c34;
             color: white;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition */
         }
         #letter-box {
             font-size: 48px;
@@ -61,58 +62,57 @@
 
     <script>
         let timeLeft = 45;
-        let inputCount = 0; // Track the number of inputs
-        const maxInputs = 40; // Maximum allowed inputs
+        let inputCount = 0; 
+        const maxInputs = 40; 
         const letters = ['P', 'B', 'D', 'Q', 'R'];
         let lastLetter = '';
-        let pAppeared = 0; // Track how many times 'P' appears
-        let pCorrect = 0; // Track how many times 'P' was correctly input by the user
-        let pMissed = 0; // Track how many times 'P' was missed or incorrectly input
-        let wrongKeyCount = 0; // Track how many wrong keys are pressed
-        let currentLetter = ''; // Track the current letter displayed
-        const letterChangeInterval = 560; // Fixed interval for letter changes (in milliseconds)
+        let pAppeared = 0; 
+        let pCorrect = 0;
+        let pMissed = 0; 
+        let wrongKeyCount = 0;
+        let currentLetter = ''; 
+        const letterChangeInterval = 560; 
         let countdown;
-        let letterChange; // For letter interval
-        let nextPageButtonVisible = false; // Flag to track if the next page button is visible
-        let testID; // To hold the unique test ID
+        let letterChange; 
+        let testID; 
 
-        // HTML elements
         let timerElement = document.getElementById('timer');
         let letterBox = document.getElementById('letter-box');
         let inputBox = document.getElementById('input-box');
         let startBtn = document.getElementById('start-btn');
         let nextPageBtn = document.getElementById('next-page-btn');
 
-        // Function to fetch unique test ID from the server or from local storage
         async function fetchUniqueTestID() {
-    return fetch('store_test_id.php', {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        testID = data.test_id;
-        document.getElementById('test-id').innerText = testID;
-    })
-    .catch(error => {
-        console.error('Error fetching test ID:', error);
-    });
-}
+            return fetch('store_test_id.php', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.test_id) {
+                    testID = data.test_id;
+                    document.getElementById('test-id').innerText = testID;
+                } else {
+                    console.warn("No test ID found.");
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching test ID:', error);
+            });
+        }
 
-
-
-        
-        // Function to start the test
         async function startTest() {
             try {
-                await fetchUniqueTestID(); // Get the unique test ID from the server
+                await fetchUniqueTestID(); 
             } catch (error) {
                 alert('Failed to fetch test ID. Please try again.');
-                return; // Prevent the test from starting without a valid test ID
+                return;
             }
-
             startBtn.style.display = 'none'; 
             inputBox.disabled = false;
             inputBox.focus(); 
+
+            document.body.style.backgroundColor = 'white';
+            document.body.style.color = 'black'; 
 
             countdown = setInterval(() => {
                 if (timeLeft <= 0 || inputCount >= maxInputs) {

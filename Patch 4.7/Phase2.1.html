@@ -112,12 +112,15 @@ async function fetchUniqueTestID() {
 
         // Function to start the test
         async function startTest() {
+    
             try {
                 await fetchUniqueTestID(); // Get the unique test ID from the server
             } catch (error) {
                 alert('Failed to fetch test ID. Please try again.');
                 return; // Prevent the test from starting without a valid test ID
             }
+            document.body.style.backgroundColor = 'white';
+            document.body.style.color = 'black'; 
 
             startBtn.style.display = 'none'; 
             inputBox.disabled = false;

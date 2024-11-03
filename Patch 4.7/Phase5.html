@@ -58,7 +58,7 @@
     <div id="letter-box">Letter will appear here</div>
     <input id="input-box" type="text" disabled>
     <button id="start-btn">Start Test</button>
-    <button id="next-page-btn" onclick="window.location.href='index3.html'">Go to Next Test</button>
+    <button id="next-page-btn" onclick="window.location.href='test2.html'">Go to Next Test</button>
 
         <script>
         let timeLeft = 45;
@@ -113,6 +113,8 @@ async function fetchUniqueTestID() {
                 alert('Failed to fetch test ID. Please try again.');
                 return; // Prevent the test from starting without a valid test ID
             }
+            document.body.style.backgroundColor = 'white';
+            document.body.style.color = 'black'; 
 
             startBtn.style.display = 'none'; 
             inputBox.disabled = false;

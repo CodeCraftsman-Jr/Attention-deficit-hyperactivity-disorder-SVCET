@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     } else {
         
-        header("Location: Sign_up.html?error=No user found with this username or email!");
+        header("Location: signinerror.html?error=No user found with this username or email!");
     }
     $stmt->close();
     $conn->close();
