@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/about-app.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #E0E0E0;
+            font-family: Arial, sans-serif;
+        }
+        .card-container {
+            padding: 20px 0;
+            background-color: #1c1c1c;
+            height: 900px;
+            width: 100%;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #212121;
+            color: #E0E0E0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 800px; /* Adjusts height to the full height of the container */
+            width: 550px; /* Makes each card take full width of its column */
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 255, 150, 0.3); /* Apply box-shadow on hover */
+        }
+        .card img {
+            height: 700px;
+            object-fit: cover;
+            filter: brightness(80%);
+        }
+        .card-body {
+            text-align: center;
+        }
+        .card-butt {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 1rem;
+            color: #121212;
+            background-color: #00FF96;
+            border-radius: 5px;
+            border: none;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+            box-shadow: 0 0 8px rgba(0, 255, 150, 0.6);
+        }
+        .card-butt:hover {
+            background-color: #00cc78;
+            color: #ffffff;
+        }
+        .card-text {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<section class="card-container">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <!-- Card 1 -->
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card w-100">
+                    <img src="https://alterdigitalsolutions.com/wp-content/uploads/2024/02/Blog-Post-1536x1536.jpg"
+                         class="card-img-top" alt="Component 1 Image">
+                    <div class="card-body">
+                        <p class="card-text"><a href="./comp-1.html" class="card-butt">Component -1</a></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card w-100">
+                    <img src="https://planorama.design/wp-content/uploads/2021/04/feature_planning_and_prototype.svg"
+                         class="card-img-top" alt="Component 2 Image">
+                    <div class="card-body">
+                        <p class="card-text"><a href="./comp2.html" class="card-butt">Component -2</a></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card w-100">
+                    <img src="https://planorama.design/wp-content/uploads/2021/04/dev_ready_product_documentation.svg"
+                         class="card-img-top" alt="Component 3 Image">
+                    <div class="card-body">
+                        <p class="card-text"><a href="./comp3.html" class="card-butt">Component -3</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

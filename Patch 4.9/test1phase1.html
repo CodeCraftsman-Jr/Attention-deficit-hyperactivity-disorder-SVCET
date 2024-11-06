@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Test Game</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('https://static.vecteezy.com/system/resources/previews/006/712/977/non_2x/abstract-health-medical-science-healthcare-icon-digital-technology-doctor-concept-modern-innovation-treatment-medicine-on-hi-tech-future-blue-background-for-wallpaper-template-web-design-vector.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            color: white; /* Ensures text is visible on the background */
+            background-blur: 10px; /* Blurs background for readability */
+        }
+
+        /* Animation for background color change */
+        @keyframes backgroundAnimation {
+            0% {
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            100% {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+        }
+
+        #game-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.40); /* Semi-transparent black for contrast */
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out; /* Fade-in effect */
+        }
+
+        /* Fade-in effect for game container */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #timer {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #000000; /* Golden color for the timer */
+        }
+
+        #letter {
+            font-size: 60px;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #000000; /* Tomato red for the letters */
+        }
+
+        input {
+            font-size: 24px;
+            padding: 10px;
+            width: 80%;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #00a2ff; /* Golden border */
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #333; /* Dark text for the input box */
+        }
+
+        input:focus {
+            border-color: #1162f8; /* Highlight the input field on focus */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #28a745; /* Green for the start button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        #log {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 250px;
+            word-wrap: break-word;
+        }
+
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8); /* Darker background for popup */
+            color: white;
+            border-radius: 8px;
+        }
+
+        #popup button {
+            background-color: #007bff; /* Blue for popup button */
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+        }
+
+        #popup button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="timer">00:00</div>
+        <div id="letter">P</div>
+        <input type="text" id="input-box" autofocus>
+        <button id="start-btn">Start Game</button>
+        <div id="log">
+            <p>Test ID: <span id="test-id">Loading...</span></p>
+            <p>Correct: <span id="correct">0</span></p>
+            <p>Incorrect: <span id="incorrect">0</span></p>
+            <p>Missed: <span id="missed">0</span></p>
+            <p>P Shown: <span id="p-count">0</span></p>
+            <p>Total Letters: <span id="total-letters">0</span></p>
+        </div>
+        <div id="popup">
+            <p>Test Completed!</p>
+            <button id="next-test-btn">Go to Next Test</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize game variables
+        let timer = 60;
+        let correctResponses = 0;
+        let incorrectResponses = 0;
+        let missedResponses = 0;
+        let pCount = 0;
+        let totalLettersShown = 0;
+        let testID = '';
+        let gameInterval;
+        let letterInterval;
+        let letters = ['P', 'B', 'D', 'Q', 'R'];
+        let currentLetter = '';
+        let pShownCount = 0;
+
+        // Fetch the unique Test ID
+        async function fetchUniqueTestID() {
+            return fetch('store_test_id.php', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.test_id) {
+                    testID = data.test_id;
+                    document.getElementById('test-id').innerText = testID;
+                } else {
+                    console.warn("No test ID found.");
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching test ID:', error);
+            });
+        }
+
+        // Function to update the log
+        function updateLog() {
+            document.getElementById('correct').innerText = correctResponses;
+            document.getElementById('incorrect').innerText = incorrectResponses;
+            document.getElementById('missed').innerText = missedResponses;
+            document.getElementById('p-count').innerText = pCount;
+            document.getElementById('total-letters').innerText = totalLettersShown;
+        }
+
+        // Function to submit data to Google Forms
+        function submitToGoogleForms() {
+            const formActionURL = 'https://docs.google.com/forms/d/e/your-google-form-id/formResponse';  // Replace with your Google Form's action URL
+            const formData = new FormData();
+            
+            // Append form fields to FormData
+            formData.append('entry.1234567890', testID); // Replace with actual entry ID for 'testID'
+            formData.append('entry.0987654321', correctResponses); // Replace with actual entry ID for 'correct'
+            formData.append('entry.1122334455', incorrectResponses); // Replace with actual entry ID for 'incorrect'
+            formData.append('entry.5566778899', missedResponses); // Replace with actual entry ID for 'missed'
+            formData.append('entry.6677889900', pCount); // Replace with actual entry ID for 'numberOfP'
+            formData.append('entry.7891234567', totalLettersShown); // Total letters shown field
+
+            // Submit the form data to Google Forms
+            fetch(formActionURL, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Data submitted successfully');
+                } else {
+                    console.error('Error submitting data to Google Forms');
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting data:', error);
+            });
+        }
+
+        // Start Game
+        function startGame() {
+            document.getElementById('start-btn').style.display = 'none'; // Hide the start button
+            fetchUniqueTestID();
+            startTimer();
+            displayNextLetter();
+            // Change background to white and text color to black after the test starts
+    document.body.style.background = "white"; // Set background color to white
+    document.body.style.color = "black"; // Set text color to black
+
+    // Optionally change other elements' styles here if needed
+    document.getElementById('game-container').style.backgroundColor = "white"; // Game container background to white
+    document.getElementById('input-box').style.backgroundColor = "white"; // Input background to white
+    document.getElementById('input-box').style.color = "black"; // Input text color to black
+        }
+
+        // Timer functionality
+        function startTimer() {
+            let countdown = timer;
+            gameInterval = setInterval(function() {
+                countdown--;
+                document.getElementById('timer').innerText = formatTime(countdown);
+                if (countdown === 0) {
+                    clearInterval(gameInterval);
+                    document.getElementById('popup').style.display = 'block'; // Show popup when time is up
+                    submitToGoogleForms();
+                }
+            }, 1000);
+        }
+
+        // Format timer time
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
+
+        // Display next letter in the sequence
+        function displayNextLetter() {
+            letterInterval = setInterval(function() {
+                currentLetter = getRandomLetter();
+                document.getElementById('letter').innerText = currentLetter;
+
+                totalLettersShown++;
+                if (currentLetter === 'P') {
+                    pCount++;
+                }
+                updateLog();
+            }, 1000); // Change letter every 1 second
+        }
+
+        // Get random letter, ensuring no consecutive repetition
+        function getRandomLetter() {
+            let letter = letters[Math.floor(Math.random() * letters.length)];
+            while (letter === currentLetter) {
+                letter = letters[Math.floor(Math.random() * letters.length)];
+            }
+            return letter;
+        }
+
+        // Handle user input
+        document.getElementById('input-box').addEventListener('input', function(event) {
+            const userInput = event.target.value.toUpperCase();
+            event.target.value = '';
+
+            if (userInput === 'P' && currentLetter === 'P') {
+                correctResponses++;
+            } else if (userInput === 'P' && currentLetter !== 'P') {
+                incorrectResponses++;
+            } else if (currentLetter === 'P') {
+                missedResponses++;
+            }
+
+            updateLog();
+        });
+
+        // Start button click
+        document.getElementById('start-btn').addEventListener('click', startGame);
+
+        // Next test button click
+        document.getElementById('next-test-btn').addEventListener('click', function() {
+            location.reload(); // Reload page for next test
+        });
+
+    </script>
+</body>
+</html>

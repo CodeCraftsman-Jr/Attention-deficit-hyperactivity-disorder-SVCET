@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Letter Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        #timer {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        #letter-display {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fade-in 0.5s ease-in-out;
+        }
+        #input-box {
+            margin-bottom: 20px;
+        }
+        #log {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: right;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+        @keyframes fade-in {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="log">
+        <div>Correct Inputs: <span id="correct-count">0</span></div>
+        <div>Wrong Inputs: <span id="wrong-count">0</span></div>
+        <div>Unattempted 'P's: <span id="unattempted-count">0</span></div>
+        <div>Total 'P's Shown: <span id="total-p-count">0</span></div>
+    </div>
+    <div id="timer">00:00</div>
+    <div id="letter-display"></div>
+    <input type="text" id="input-box" autofocus>
+    <button id="start-button">Start Game</button>
+
+    <script>
+        let correctCount = 0;
+        let wrongCount = 0;
+        let unattemptedCount = 0;
+        let totalPCount = 0;
+        let timeLeft = 60;
+        let interval;
+        let letters = ['P', 'B', 'D', 'Q', 'R'];
+        let lastLetter = '';
+        let isGameActive = false;
+
+        const timerElement = document.getElementById('timer');
+        const letterDisplay = document.getElementById('letter-display');
+        const inputBox = document.getElementById('input-box');
+        const startButton = document.getElementById('start-button');
+
+        function formatTime(seconds) {
+            const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const sec = String(seconds % 60).padStart(2, '0');
+            return `${min}:${sec}`;
+        }
+
+        function getRandomLetter() {
+            let randomLetter;
+            do {
+                randomLetter = letters[Math.floor(Math.random() * letters.length)];
+            } while (randomLetter === lastLetter); // Ensure no consecutive repetition
+            lastLetter = randomLetter; // Update last letter
+            return randomLetter;
+        }
+
+        function startGame() {
+            startButton.style.display = 'none';
+            inputBox.value = '';
+            inputBox.disabled = false;
+            correctCount = 0;
+            wrongCount = 0;
+            unattemptedCount = 0;
+            totalPCount = 0;
+            timeLeft = 60;
+            timerElement.textContent = formatTime(timeLeft);
+            updateLog();
+            inputBox.focus();
+            isGameActive = true;
+
+            interval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    timerElement.textContent = formatTime(timeLeft);
+                    // If game is about to finish and hasn't reached 25 'P', show more 'P'
+                    if (timeLeft <= 5 && totalPCount < 25) {
+                        showSpecificLetter('P');
+                    }
+                } else {
+                    clearInterval(interval);
+                    inputBox.disabled = true;
+                    alert('Time is up! Game over.');
+                    startButton.style.display = 'block';
+                    showBreakTimer();
+                }
+            }, 1000);
+
+            showLetter();
+        }
+
+        function showLetter() {
+            if (correctCount + wrongCount + unattemptedCount >= 25 || totalPCount === 25) {
+                // Stop game if total inputs (correct + wrong + unattempted) equals 25
+                clearInterval(interval);
+                inputBox.disabled = true;
+                alert('You reached the limit of 25 inputs. Game over.');
+                return;
+            }
+
+            let currentLetter = getRandomLetter(); // Get a random letter (no consecutive repetition)
+
+            letterDisplay.style.animation = 'none';
+            void letterDisplay.offsetWidth;
+            letterDisplay.style.animation = 'fade-in 0.5s ease-in-out';
+            letterDisplay.textContent = currentLetter;
+
+            if (currentLetter === 'P') {
+                totalPCount++;
+                document.getElementById('total-p-count').textContent = totalPCount;
+            }
+
+            setTimeout(() => {
+                // Check for unattempted P's if the user didn't respond
+                if (letterDisplay.textContent === 'P' && inputBox.value.trim() === '') {
+                    unattemptedCount++;
+                }
+                inputBox.value = '';
+                showLetter();
+            }, 1000); // Adjust timing to fit the desired pace of the game
+        }
+
+        function showSpecificLetter(letter) {
+            letterDisplay.textContent = letter;
+            totalPCount++;
+            document.getElementById('total-p-count').textContent = totalPCount;
+        }
+
+        function updateLog() {
+            document.getElementById('correct-count').textContent = correctCount;
+            document.getElementById('wrong-count').textContent = wrongCount;
+            document.getElementById('unattempted-count').textContent = unattemptedCount;
+        }
+
+        function showBreakTimer() {
+            let breakTime = 15;
+            const breakTimerElement = document.createElement('div');
+            breakTimerElement.textContent = `Break Time: ${formatTime(breakTime)}`;
+            document.body.appendChild(breakTimerElement);
+
+            const breakInterval = setInterval(() => {
+                if (breakTime > 0) {
+                    breakTime--;
+                    breakTimerElement.textContent = `Break Time: ${formatTime(breakTime)}`;
+                } else {
+                    clearInterval(breakInterval);
+                    breakTimerElement.remove();
+                    startButton.style.display = 'block';
+                    alert('Break time over! You can start again.');
+                }
+            }, 1000);
+        }
+
+        inputBox.addEventListener('input', () => {
+            const currentLetter = letterDisplay.textContent;
+            if (currentLetter === 'P' && inputBox.value.trim().toUpperCase() === 'P') {
+                correctCount++;
+            } else if (inputBox.value.trim().toUpperCase() === 'P' && currentLetter !== 'P') {
+                wrongCount++;
+            }
+            inputBox.value = '';
+            updateLog();
+        });
+
+        startButton.addEventListener('click', startGame);
+    </script>
+</body>
+</html>
