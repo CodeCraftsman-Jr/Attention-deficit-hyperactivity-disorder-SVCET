@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/about-app.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #E0E0E0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Section for the cards */
+        .card-container {
+            padding: 60px 0;
+            background-color: #1c1c1c;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: #212121;
+            color: #E0E0E0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 255, 150, 0.4);
+        }
+
+        .card img {
+            height: 250px;
+            object-fit: cover;
+            transition: filter 0.3s;
+        }
+
+        .card:hover img {
+            filter: brightness(60%);
+        }
+
+        .card-body {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card-butt {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            color: #121212;
+            background-color: #00FF96;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+            box-shadow: 0 0 8px rgba(0, 255, 150, 0.5);
+        }
+
+        .card-butt:hover {
+            background-color: #00cc78;
+            color: #ffffff;
+        }
+
+        .card-text {
+            margin-top: 15px;
+        }
+
+        /* Media Query for responsiveness */
+        @media (max-width: 768px) {
+            .card-container {
+                padding: 30px 0;
+            }
+            .card img {
+                height: 180px;
+            }
+            .card-butt {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<section class="card-container">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Card 1 -->
+            <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+                <div class="card w-100">
+                    <img src="https://alterdigitalsolutions.com/wp-content/uploads/2024/02/Blog-Post-1536x1536.jpg"
+                         class="card-img-top" alt="Component 1 Image">
+                    <div class="card-body">
+                        <p class="card-text"><a href="./comp-1.html" class="card-butt">Phase 1</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+                <div class="card w-100">
+                    <img src="https://planorama.design/wp-content/uploads/2021/04/feature_planning_and_prototype.svg"
+                         class="card-img-top" alt="Component 2 Image">
+                    <div class="card-body">
+                        <p class="card-text"><a href="./comp2.html" class="card-butt">Phase 2</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+                <div class="card w-100">
+                    <img src="https://planorama.design/wp-content/uploads/2021/04/dev_ready_product_documentation.svg"
+                         class="card-img-top" alt="Component 3 Image">
+                    <div class="card-body">
+                        <p class="card-text"><a href="./comp3.html" class="card-butt">Phase 3</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bootstrap JS (Optional) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

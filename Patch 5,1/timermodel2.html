@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15-Second Stylish Timer</title>
+<style>
+    /* Basic Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #121212;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Timer Container */
+    .timer-container {
+        position: relative;
+        width: 250px;
+        height: 250px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent;
+    }
+
+    /* SVG Circle for the Progress Ring */
+    .progress-ring {
+        transform: rotate(-90deg);
+    }
+
+    .progress-ring circle {
+        fill: transparent;
+        stroke-width: 15;
+        stroke: #4dff00;
+    }
+
+    .background-ring {
+        stroke: #333;
+    }
+
+    /* Timer Text */
+    .timer-text {
+        position: absolute;
+        font-size: 3em;
+        font-weight: bold;
+        color: #00FF00;
+        z-index: 1;
+        text-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+    }
+
+    /* Cool animation for the timer number */
+    @keyframes pulseText {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Apply pulsing animation on text */
+    .timer-text {
+        animation: pulseText 1s infinite;
+    }
+</style>
+</head>
+<body>
+
+<div class="timer-container">
+    <svg class="progress-ring" width="250" height="250">
+        <circle class="background-ring" cx="125" cy="125" r="100"></circle>
+        <circle class="progress-ring__circle" cx="125" cy="125" r="100" stroke-dasharray="628.318" stroke-dashoffset="0"></circle>
+    </svg>
+    <div class="timer-text" id="timer">15</div>
+</div>
+
+<script>
+    let timeLeft = 15;
+    const timerDisplay = document.getElementById('timer');
+    const progressRingCircle = document.querySelector('.progress-ring__circle');
+    const totalTime = 15; // Total time in seconds
+    const circumference = 2 * Math.PI * 100; // Circumference of the circle
+
+    // Function to update the progress ring
+    function setProgress(percent) {
+        const offset = circumference - (percent / 100) * circumference;
+        progressRingCircle.style.strokeDashoffset = offset;
+    }
+
+    // Countdown Function
+    const countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+        const progress = ((totalTime - timeLeft) / totalTime) * 100;
+        setProgress(progress);
+
+        // Redirect to another page when the timer reaches zero
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            window.location.href = 'nextpage.html';  // Change 'nextpage.html' to your desired URL
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>

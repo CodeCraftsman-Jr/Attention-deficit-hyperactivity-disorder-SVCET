@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Procedure Component 3</title>
+    <link rel="stylesheet" href="./assets/css/comp1.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+            url('https://png.pngtree.com/thumb_back/fw800/background/20241007/pngtree-futuristic-high-speed-network-connectivity-technology-background-data-flow-in-conceptual-image_16320908.jpg');
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px;
+            background-color: rgba(74, 144, 226, 0.7);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .section {
+            padding: 50px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: #ffdd57;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .video-container {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(74, 144, 226, 0.8);
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header, .section, .video-container {
+                margin: 10px 5px;
+                padding: 30px 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Additional styles specific to Component 3 */
+        .back-title {
+            position: absolute;
+            font-size: 150px;
+            color: rgba(200, 200, 200, 0.1); /* Adjusted opacity */
+            z-index: -1;
+            text-align: center;
+            opacity: 0.3;
+        }
+
+        .rotate {
+            position: absolute;
+            top: 350px;
+            left: 50px;
+        }
+
+        .rotate .heading {
+            font-family: "Arial", sans-serif;
+            font-size: 16px; /* Slightly larger font size */
+            text-transform: uppercase;
+            letter-spacing: 1.5em;
+            transform: rotate(90deg);
+            transform-origin: left top 0;
+        }
+
+        .image-responsive {
+            width: 100%;
+            border-radius: 12px; /* Adjusted border radius */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="back-title">Component 3</h2>
+        <div class="header">
+            <h1>Explore Our Interactive Procedure</h1> <!-- Modified title -->
+        </div>
+        <div class="row" style="position: relative; margin-top: 50px; z-index: 2;">
+            <div class="col-lg-6">
+                <img src="https://img.freepik.com/premium-vector/hospital-medical-billing-services-illustration_2175-4568.jpg" class="image-responsive" alt="Medical Billing Illustration">
+            </div>
+
+            <div class="col-lg-6">
+                <h2>Component 3 </h2> <!-- Modified header -->
+                <p>In this task, you will be shown a sequence of colors accompanied by an audio prompt naming each color. Your objective is to click on the color that corresponds to the audio prompt. Each color will be displayed for 2 seconds, and you can only respond once per prompt. The entire task will last for 1 minute, so stay alert!</p>
+            </div>
+        </div>
+
+        <div class="video-container">
+            <h2>Introduction to the Procedure</h2> <!-- Changed heading -->
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Your Company Name. All Rights Reserved.</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybVsY6H5QX4dD+dY6qJkR1RzM7l9cP2sA0QAk1QxNTXvRSV7I" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-NEyV1jF7DgUGBd1ULqj8Us8D7qAZt5qZMBEtl5vbE5EzxlgvMDhw+eRCCZjJj/Nw" crossorigin="anonymous"></script>
+</body>
+
+</html>

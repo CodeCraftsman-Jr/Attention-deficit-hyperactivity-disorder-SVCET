@@ -1,0 +1,373 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Recognition Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-image: url('https://static.vecteezy.com/system/resources/previews/026/536/578/large_2x/healthcare-medical-cross-shape-symbol-with-capsule-for-medicine-and-science-background-design-concept-illustration-vector.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 30px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        #timer {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #letter {
+            font-size: 72px;
+            margin: 30px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #ccc;
+            display: inline-block;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #inputBox {
+            font-size: 28px;
+            padding: 10px;
+            width: 120px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+            transition: border 0.3s ease;
+        }
+
+        #inputBox:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        #startButton {
+            font-size: 24px;
+            padding: 15px 30px;
+            margin-top: 30px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #startButton:hover {
+            background-color: #45a049;
+        }
+
+        .log {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 250px;
+        }
+
+        #test-id {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 18px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .modal-body {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: black; /* Black font for the message */
+        }
+
+        .modal-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .modal-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Letter Recognition Game</h1>
+    
+    <div id="timer">Time Remaining: 60s</div>
+
+    <div id="letter"></div>
+
+    <input type="text" id="inputBox" maxlength="1" placeholder="Type letter" autofocus>
+
+    <button id="startButton">Start Game</button>
+    
+    <div class="log">
+        <p>Total Letters: <span id="totalLetters">0</span></p>
+        <p>P Letters: <span id="pLetters">0</span></p>
+        <p>Correct: <span id="correctCount">0</span></p>
+        <p>Unattempted: <span id="unattemptedCount">0</span></p>
+        <p>Wrong: <span id="wrongCount">0</span></p>
+    </div>
+
+    <div id="test-id">Loading test ID...</div>
+
+    <!-- Modal -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader"></div>
+            <p class="modal-body" id="modalBody"></p>
+            <button class="modal-button" id="continueButton">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        let timer = 60; // Game time
+        let pCount = 0; // Count of 'p' letters shown
+        let totalCount = 0; // Total letters shown
+        let correctCount = 0; // Correct answers
+        let unattemptedCount = 0; // Unattempted answers
+        let wrongCount = 0; // Wrong answers
+        let pTarget = 25; // Goal of 25 'p' letters
+        let gameStarted = false; // Flag to track if the game has started
+        let gameEnded = false; // Flag to check if the game is over
+        let pLimit = 25; // Target number of 'p' letters to show in the first 50 seconds
+        let inputLocked = false; // Flag to lock input for the current letter
+        let testID = ''; // Variable to store the fetched test ID
+        
+        // Fetch the unique test ID from the server
+        async function fetchUniqueTestID() {
+            try {
+                const response = await fetch('store_test_id.php', { method: 'GET' });
+                const data = await response.json();
+                if (data.test_id) {
+                    testID = data.test_id;
+                    document.getElementById('test-id').innerText = `Test ID: ${testID}`;
+                } else {
+                    console.warn("No test ID found.");
+                }
+            } catch (error) {
+                console.error('Error fetching test ID:', error);
+            }
+        }
+
+        // Call fetchUniqueTestID when the page loads
+        window.onload = fetchUniqueTestID;
+
+        // The possible letters
+        const letters = ['p', 'b', 'd', 'q', 'r'];
+
+        // Get DOM elements
+        const timerElement = document.getElementById("timer");
+        const letterElement = document.getElementById("letter");
+        const inputBox = document.getElementById("inputBox");
+        const totalLettersElement = document.getElementById("totalLetters");
+        const pLettersElement = document.getElementById("pLetters");
+        const correctCountElement = document.getElementById("correctCount");
+        const unattemptedCountElement = document.getElementById("unattemptedCount");
+        const wrongCountElement = document.getElementById("wrongCount");
+        const startButton = document.getElementById("startButton");
+        const gameOverModal = document.getElementById("gameOverModal");
+        const modalHeader = document.getElementById("modalHeader");
+        const modalBody = document.getElementById("modalBody");
+        const continueButton = document.getElementById("continueButton");
+
+        let currentLetter = ''; // Variable to store the current letter displayed
+
+        // Timer countdown function
+        function updateTimer() {
+            if (gameStarted && timer > 0 && !gameEnded) {
+                timer--;
+                timerElement.textContent = `Time Remaining: ${timer}s`;
+            } else if (timer === 0) {
+                // Timer reaches zero, stop the game and show result
+                gameEnded = true;
+                showModal();
+            }
+        }
+        
+        // Random letter generator (prioritize 'p' first)
+        function generateLetter() {
+            let randomLetter;
+            let lastLetter = letterElement.textContent;
+
+            if (timer > 10 && pCount < pLimit) {
+                if (Math.random() < 0.8 && lastLetter !== 'p') {
+                    randomLetter = 'p';
+                } else {
+                    randomLetter = letters[Math.floor(Math.random() * letters.length)];
+                }
+            } else {
+                randomLetter = letters[Math.floor(Math.random() * letters.length)];
+            }
+
+            while (randomLetter === 'p' && lastLetter === 'p') {
+                randomLetter = letters[Math.floor(Math.random() * letters.length)];
+            }
+
+            return randomLetter;
+        }
+        
+        // Function to update the game status (letter, counts, etc.)
+        function updateGame() {
+            if (gameEnded) return;
+
+            currentLetter = generateLetter();
+            letterElement.textContent = currentLetter;
+            totalCount++;
+            totalLettersElement.textContent = totalCount;
+
+            if (currentLetter === 'p') {
+                pCount++;
+                pLettersElement.textContent = pCount;
+            }
+
+            inputBox.value = ''; 
+            inputLocked = false;
+        }
+
+        // Input listener for the user input
+        inputBox.addEventListener('input', function() {
+            if (!gameStarted || gameEnded || inputLocked) return; 
+
+            const userInput = inputBox.value.toLowerCase();
+
+            if (userInput === currentLetter) {
+                if (currentLetter === 'p') {
+                    correctCount++;
+                    correctCountElement.textContent = correctCount;
+                }
+            } else if (userInput === '') {
+                unattemptedCount++;
+                unattemptedCountElement.textContent = unattemptedCount;
+            } else {
+                wrongCount++;
+                wrongCountElement.textContent = wrongCount;
+            }
+
+            inputLocked = true;
+        });
+
+        // Start the game
+        function startGame() {
+            if (!gameStarted) {
+                gameStarted = true;
+                startButton.style.display = 'none'; 
+                setInterval(() => {
+                    if (!gameEnded && timer > 0) {
+                        updateGame();
+                    }
+                }, 1000);
+                setInterval(updateTimer, 1000);
+            }
+        }
+
+        // Show the game over modal
+        function showModal() {
+            if (pCount < pTarget) {
+                modalHeader.textContent = `Game Over!`;
+                modalBody.textContent = `Time's up! You didn't get 25 'p' letters. You got ${pCount} 'p' letters.`;
+            } else {
+                modalHeader.textContent = `Congratulations!`;
+                modalBody.textContent = `You reached the goal of 25 'p' letters! You got ${pCount} 'p' letters.`;
+            }
+
+            gameOverModal.style.display = "block";
+        }
+
+        function submitForm() {
+    const formData = new FormData();
+    formData.append('entry.1875170509', testID); // Replace with entry ID for test_id
+    formData.append('entry.1023888903', totalCount); // Replace with entry ID for total_letters
+    formData.append('entry.1855994255', pCount); // Replace with entry ID for p_letters
+    formData.append('entry.12015905', correctCount); // Replace with entry ID for correct_count
+    formData.append('entry.1797772207', unattemptedCount); // Replace with entry ID for unattempted_count
+    formData.append('entry.1576321042', wrongCount); // Replace with entry ID for wrong_count
+
+    fetch('https://docs.google.com/forms/d/e/1FAIpQLSc9b_S_5bjV7PmK6vOGyq8PbF-HqgIKpZcgDu0oEfPjyise8A/formResponse', {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' },
+    })
+    .then(response => {
+        modalBody.textContent = 'Form submitted successfully!';
+        modalBody.style.color = 'green';
+    })
+    .catch(error => {
+        modalBody.textContent = 'Error submitting form';
+        modalBody.style.color = 'red';
+    });
+}
+
+
+        continueButton.addEventListener('click', function() {
+            submitForm();
+            setTimeout(() => {
+                window.location.href = "test1phase2.html";
+            }, 1000);
+        });
+
+        startButton.addEventListener('click', startGame);
+    </script>
+
+</body>
+</html>
