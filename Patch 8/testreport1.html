@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embed Excel Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        header {
+            background: #6200ea;
+            color: #fff;
+            padding: 1rem;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            border: 2px solid #6200ea;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 1450px;
+            height: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+        footer {
+            margin-top: 1rem;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        footer a {
+            color: #6200ea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Test Reports</h1>
+        <p>These Sheets can only be Read - Writing Access is restricted to Admins</p>
+    </header>
+
+    <iframe 
+        src="https://docs.google.com/spreadsheets/d/e/EXAMPLE_URL/pubhtml?widget=true&headers=false" 
+        allowfullscreen>
+    </iframe>
+
+    <footer>
+        <p>Powered by AttenTrack </a></p>
+    </footer>
+</body>
+</html>

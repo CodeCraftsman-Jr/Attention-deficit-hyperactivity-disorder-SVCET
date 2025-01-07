@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention Types</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #d4fc79, #96e6a1);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 1900px;
+            height: 85vh;
+        }
+        .container h1 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 34px;
+        }
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-evenly;
+        }
+        .card {
+    background: linear-gradient(145deg, #ff6ec7, #ff9a8b);  /* Added a more vibrant gradient */
+    border-radius: 15px;  /* Increased the border-radius for a softer, rounder look */
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.9); /* Updated shadow for a more 3D effect */
+    padding: 20px;
+    text-align: center;
+    width: 250px;
+    height: 600px;
+    font-family: 'Arial', sans-serif;  /* Adding a modern font */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Smooth transition on hover */
+        }
+
+    .card:hover {
+    transform: translateY(-10px);  /* Card slightly lifts up on hover */
+    box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.1), -5px -5px 20px rgba(255, 255, 255, 0.8);  /* Stronger shadow on hover */
+    cursor: pointer;  /* Pointer cursor for a clickable effect */
+    }
+
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .button {
+    display: inline-block;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 25px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(90deg, #6a11cb, #2575fc);  /* Initial gradient background */
+    background-size: 200% 200%; /* Double the size of the gradient for smooth animation */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-position 0.6s;  /* Add smooth background animation */
+}
+
+/* Add color animation when hovered */
+.button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);  /* Larger shadow on hover */
+    background-position: 200% 0;  /* The gradient will shift during the hover effect */
+}
+
+/* Add a keyframes animation to smoothly transition gradient colors */
+@keyframes gradientAnimation {
+    0% {
+        background: linear-gradient(90deg, #6a11cb, #2575fc);
+    }
+    50% {
+        background: linear-gradient(90deg, #ff8c00, #f4e04d); /* Yellow to orange gradient */
+    }
+    100% {
+        background: linear-gradient(90deg, #6a11cb, #2575fc); /* Back to original gradient */
+    }
+}
+
+/* Button animation with color cycling */
+.button:active {
+    animation: gradientAnimation 2s infinite; /* Animate the background colors */
+    transform: scale(0.95);  /* Slightly shrink the button when clicked */
+}
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        .button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Attention Types</h1>
+        <div class="cards">
+            <div class="card">
+                <img src="https://krisp.ai/blog/wp-content/uploads/2024/10/theories-of-selective-attention.webp" alt="Selective Attention">
+                <h2>Selective Attention</h2>
+                <p>Selective attention is the ability to focus on and prioritize relevant information while ignoring distractions and irrelevant information.</p> <p>It's a survival instinct that allows people to focus on a few things and ignore the rest.</p>
+                <p>CLick Start Test to Know Your Attention level</p>
+                <button class="button" onclick="alert('Selective Attention details coming soon!')">Start Test</button>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/300x150" alt="Selective and Sustained Attention">
+                <h2>Selective and Sustained Attention</h2>
+                <button class="button" onclick="alert('Selective and Sustained Attention details coming soon!')">Start Test</button>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/300x150" alt="Alternate Attention">
+                <h2>Alternate Attention</h2>
+                <button class="button" onclick="alert('Alternate Attention details coming soon!')">Start Test</button>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/300x150" alt="Divided Attention">
+                <h2>Divided Attention</h2>
+                <button class="button" onclick="alert('Divided Attention details coming soon!')">Start Test</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

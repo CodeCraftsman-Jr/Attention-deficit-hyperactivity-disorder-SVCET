@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/about-app.css">
+    <style>
+        body {
+            background-size: cover;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Section for the cards */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh; /* Full height */
+            padding: 0;
+            background-color: rgba(0, 0, 0, 0.25); /* semi-transparent black background */
+            border-radius: 0;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: rgba(33, 33, 33, 0.25);
+            color: #E0E0E0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 30%; /* Adjust to use 3 cards per row */
+            margin: 20px;
+            height: 100%;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 255, 150, 0.4);
+        }
+
+        .card img {
+            height: 450px;
+           
+            transition: filter 0.3s;
+        }
+
+        .card:hover img {
+            filter: brightness(40%);
+        }
+
+        .card-body {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card-butt {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            color: black;
+            background-color: #40E0D0;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+            box-shadow: 0 0 8px rgba(0, 255, 150, 0.5);
+        }
+
+        .card-butt:hover {
+            background-color: #40E0D0;
+            color: white;
+        }
+
+        .card-text {
+            margin-top: 15px;
+        }
+
+        /* Media Query for responsiveness */
+        @media (max-width: 768px) {
+            .card-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .card {
+                width: 80%; /* Full width on small screens */
+                margin: 10px 0;
+            }
+            .card img {
+                height: 180px;
+            }
+            .card-butt {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="card-container">
+        <div class="container-fluid">
+            <div class="row w-100">
+                <!-- Card 1 -->
+                <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+                    <div class="card w-100">
+                        <img src="https://www.seobrothers.co/wp-content/uploads/2021/12/white-label-seo-link-building.png" 
+                             class="card-img-top" alt="Component 1 Image">
+                        <div class="card-body">
+                            <p class="card-text"><a href="./comp-1.html" class="card-butt">Phase 1</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+                    <div class="card w-100">
+                        <img src="https://www.seobrothers.co/wp-content/uploads/2021/11/white-label-seo-success.png" 
+                             class="card-img-top" alt="Component 2 Image">
+                        <div class="card-body">
+                            <p class="card-text"><a href="./comp2.html" class="card-butt">Phase 2</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+                    <div class="card w-100">
+                        <img src="https://www.seobrothers.co/wp-content/uploads/2021/12/leverage-proven-process.png" 
+                             class="card-img-top" alt="Component 3 Image">
+                        <div class="card-body">
+                            <p class="card-text"><a href="./comp3.html" class="card-butt">Phase 3</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS (Optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
