@@ -10,15 +10,29 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+session_start();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
+    $pass = $_POST['password'];
 
     $sql = "SELECT * FROM users WHERE email='$email'";
     $result = $conn->query($sql);
-    
+
     if ($result->num_rows > 0) {
-        // Here, you can generate a password reset link, send an email, etc.
-        echo "A password recovery email has been sent!";
+        $user = $result->fetch_assoc();
+        
+        if (password_verify($pass, $user['password'])) {
+            // Session: Store user_id and associated test_id
+            $_SESSION['user_id'] = $user['id'];  // Store user ID for session
+            $_SESSION['test_id'] = $user['test_id']; // Retrieve and store the existing test ID
+
+            echo "Logged in successfully! Welcome.";
+            // Redirect to user dashboard or homepage
+            header('Location: index.html');
+        } else {
+            echo "Incorrect password";
+        }
     } else {
         echo "No user found with this email!";
     }

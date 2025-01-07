@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+</head>
+<body>
+    <h2>Sign Up</h2>
+    <form action="signup1.php" method="POST">
+        <label for="test-id">Test ID (Unique ID):</label>
+        <span id="test-id">Loading...</span><br><br>
+        
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <input type="submit" value="Sign Up">
+    </form>
+     <script>
+        async function fetchUniqueTestID() {
+            try {
+                const response = await fetch('store_test_id.php', { method: 'GET' });
+                const data = await response.json();
+                if (data.test_id) {
+                    document.getElementById('test-id').innerText = data.test_id;
+                } else {
+                    console.warn("No test ID found.");
+                }
+            } catch (error) {
+                console.error('Error fetching test ID:', error);
+            }
+        }
+
+        // Call fetchUniqueTestID when the page loads
+        window.onload = fetchUniqueTestID;
+    </script>
+</body>
+</html>
