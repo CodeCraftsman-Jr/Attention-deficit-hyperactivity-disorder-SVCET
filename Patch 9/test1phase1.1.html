@@ -239,6 +239,8 @@
         let letterTimer = null;
         let currentLetter = ''; // Current letter being shown
         let responseReceived = false; // Track if user responded to current letter
+        let pPositions = [];
+        let totalLetters = Math.floor(60000 / letterInterval); // Total possible letters in 60 seconds
 
         // Fetch the unique test ID from the server
         async function fetchUniqueTestID() {
@@ -302,6 +304,29 @@
             letterElement.classList.add('letter-change');
         }
 
+        function generatePPositions() {
+            // Clear existing positions
+            pPositions = [];
+            
+            // Calculate spacing between p's to ensure even distribution
+            let spacing = Math.floor(totalLetters / pTarget);
+            
+            // Generate positions for all 25 p's
+            for (let i = 0; i < pTarget; i++) {
+                let position = i * spacing;
+                // Ensure we don't exceed total possible letters
+                if (position < totalLetters) {
+                    pPositions.push(position);
+                }
+            }
+            
+            // Shuffle the positions to make it less predictable
+            for (let i = pPositions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pPositions[i], pPositions[j]] = [pPositions[j], pPositions[i]];
+            }
+        }
+
         function generateLetter() {
             if (gameEnded) return;
 
@@ -312,12 +337,9 @@
 
             responseReceived = false;
 
-            let remainingLetters = Math.ceil((timer * 1000) / letterInterval);
-            let remainingP = pTarget - pCount;
-            let pProbability = remainingP / remainingLetters;
-
             let newLetter;
-            if (pCount < pTarget && Math.random() < pProbability) {
+            // Check if current position should show 'p'
+            if (pPositions.includes(totalCount)) {
                 newLetter = 'p';
                 pCount++;
             } else {
@@ -339,9 +361,12 @@
             inputLocked = false;
             inputBox.focus();
 
-            if (!gameEnded && timer > 0) {
+            if (!gameEnded && timer > 0 && pCount < pTarget) {
                 clearTimeout(letterTimer);
                 letterTimer = setTimeout(generateLetter, letterInterval);
+            } else if (pCount >= pTarget) {
+                gameEnded = true;
+                showModal();
             }
         }
 
@@ -384,6 +409,9 @@
                 correctCount = 0;
                 unattemptedCount = 0;
                 wrongCount = 0;
+                
+                // Generate new positions for p's
+                generatePPositions();
                 
                 // Update display
                 document.getElementById('totalLetters').textContent = '0';
