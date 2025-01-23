@@ -35,16 +35,16 @@
         }
 
         #letter {
-            font-size: 72px;
-            margin: 30px;
-            padding: 30px;
+            font-size: 200px;
+            /* margin: 30px;
+            padding: 30px; */
             color: black;
-            background-color: rgba(255, 255, 255, 0.8);
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* background-color: rgba(255, 255, 255, 0);
+            /* border: 2px solid #ccc; */
+            /* border-radius: 10px; */
+            /* box-shadow: 0 4px 8px rgba(255, 255, 255, 0); */ 
             min-width: 100px;
-            min-height: 100px;
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -223,24 +223,24 @@
     </div>
 
     <script>
-        let timer = 60; // Game time
-        let pCount = 0; // Count of 'p' letters shown
-        let totalCount = 0; // Total letters shown
-        let correctCount = 0; // Correct answers
-        let unattemptedCount = 0; // Unattempted answers
-        let wrongCount = 0; // Wrong answers
-        let pTarget = 25; // Goal of 25 'p' letters
-        let gameStarted = false; // Flag to track if the game has started
-        let gameEnded = false; // Flag to check if the game is over
-        let inputLocked = false; // Flag to lock input for the current letter
-        let testID = ''; // Variable to store the fetched test ID
-        let lastLetter = ''; // Track the last letter shown
-        let letterInterval = 1200; // 1.2 seconds between letters
-        let letterTimer = null;
-        let currentLetter = ''; // Current letter being shown
-        let responseReceived = false; // Track if user responded to current letter
+        let timer = 58; // Actual game time
+        let displayTimer = 60; // Display time
+        let gameStarted = false;
+        let gameEnded = false;
+        let inputLocked = false;
+        let pCount = 0;
+        let totalCount = 0;
+        let correctCount = 0;
+        let unattemptedCount = 0;
+        let wrongCount = 0;
+        let pTarget = 25;
         let pPositions = [];
-        let totalLetters = Math.floor(60000 / letterInterval); // Total possible letters in 60 seconds
+        let testID = null;
+        let lastLetter = '';
+        let letterInterval = 1200;
+        let letterTimer = null;
+        let currentLetter = '';
+        let responseReceived = false;
 
         // Fetch the unique test ID from the server
         async function fetchUniqueTestID() {
@@ -278,10 +278,17 @@
 
         // Timer countdown function
         function updateTimer() {
-            if (gameStarted && timer > 0 && !gameEnded) {
-                timer--;
-                timerElement.textContent = `Time Remaining: ${timer}s`;
-                if (timer === 0 || (pCount >= pTarget)) {
+            if (gameStarted && displayTimer > 0 && !gameEnded) {
+                if (displayTimer > timer) {
+                    // First 2 seconds only update display timer
+                    displayTimer--;
+                } else {
+                    // After 2 seconds, update both timers
+                    displayTimer--;
+                    timer--;
+                }
+                timerElement.textContent = `Time Remaining: ${displayTimer}s`;
+                if (timer === 0) {
                     gameEnded = true;
                     showModal();
                 }
@@ -309,13 +316,13 @@
             pPositions = [];
             
             // Calculate spacing between p's to ensure even distribution
-            let spacing = Math.floor(totalLetters / pTarget);
+            let spacing = Math.floor(60000 / letterInterval / pTarget);
             
             // Generate positions for all 25 p's
             for (let i = 0; i < pTarget; i++) {
                 let position = i * spacing;
                 // Ensure we don't exceed total possible letters
-                if (position < totalLetters) {
+                if (position < Math.floor(60000 / letterInterval)) {
                     pPositions.push(position);
                 }
             }
@@ -330,16 +337,19 @@
         function generateLetter() {
             if (gameEnded) return;
 
+            // Check if previous letter was 'p' and no response was received
             if (currentLetter === 'p' && !responseReceived) {
                 unattemptedCount++;
                 document.getElementById('unattemptedCount').textContent = unattemptedCount;
             }
 
+            // Reset response flag
             responseReceived = false;
 
             let newLetter;
-            // Check if current position should show 'p'
-            if (pPositions.includes(totalCount)) {
+            const currentPosition = totalCount;
+
+            if (pPositions.includes(currentPosition)) {
                 newLetter = 'p';
                 pCount++;
             } else {
@@ -361,12 +371,9 @@
             inputLocked = false;
             inputBox.focus();
 
-            if (!gameEnded && timer > 0 && pCount < pTarget) {
+            if (!gameEnded && timer > 0) {
                 clearTimeout(letterTimer);
                 letterTimer = setTimeout(generateLetter, letterInterval);
-            } else if (pCount >= pTarget) {
-                gameEnded = true;
-                showModal();
             }
         }
 
@@ -403,7 +410,12 @@
                 inputBox.value = '';
                 inputBox.focus();
                 
-                // Reset all counters
+                // Hide start button
+                document.getElementById('startButton').style.display = 'none';
+                
+                // Reset all counters and timers
+                timer = 58;
+                displayTimer = 60;
                 pCount = 0;
                 totalCount = 0;
                 correctCount = 0;
@@ -419,6 +431,7 @@
                 document.getElementById('correctCount').textContent = '0';
                 document.getElementById('unattemptedCount').textContent = '0';
                 document.getElementById('wrongCount').textContent = '0';
+                timerElement.textContent = `Time Remaining: ${displayTimer}s`;
                 
                 // Start the timer
                 setInterval(updateTimer, 1000);
@@ -430,17 +443,20 @@
 
         // Show the game over modal
         function showModal() {
-            if (pCount < pTarget) {
-                modalHeader.textContent = `Game Over!`;
-                modalBody.textContent = `Time's up! You didn't get 25 'p' letters. You got ${pCount} 'p' letters.`;
-            } else {
-                modalHeader.textContent = `Congratulations!`;
-                modalBody.textContent = `You reached the goal of 25 'p' letters! You got ${pCount} 'p' letters.`;
-            }
-
+            modalHeader.textContent = `Game Over!`;
+            modalBody.innerHTML = `
+                Time's up! Here are your results:<br><br>
+                Results:<br>
+                Total 'p' letters found: ${pCount}<br>
+                Correct responses: ${correctCount}<br>
+                Incorrect responses: ${wrongCount}<br>
+                Missed responses: ${unattemptedCount}<br>
+                Total letters shown: ${totalCount}
+            `;
             gameOverModal.style.display = "block";
         }
 
+        // Submit form data
         function submitForm() {
             const formData = new FormData();
             formData.append('entry.1875170509', testID); // Replace with entry ID for test_id
