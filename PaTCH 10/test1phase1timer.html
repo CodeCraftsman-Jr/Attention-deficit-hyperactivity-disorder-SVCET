@@ -4,100 +4,241 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>15-Second Timer</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
+    :root {
+        --neon-blue: #00f3ff;
+        --neon-purple: #7700ff;
+        --dark-bg: #0a0a1f;
+        --glow-color: rgba(0, 243, 255, 0.5);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     body {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-size: cover;
-        font-family: 'Orbitron', sans-serif;
+        min-height: 100vh;
+        background: var(--dark-bg);
+        font-family: 'Rajdhani', sans-serif;
+        overflow: hidden;
+    }
+
+    .scene {
+        position: relative;
+        width: 400px;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        perspective: 1000px;
     }
 
     .timer-container {
         position: relative;
-        width: 200px;
-        height: 200px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.7); /* Slight dark background for better text visibility */
-        border-radius: 50%;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        width: 300px;
+        height: 300px;
+        transform-style: preserve-3d;
+        animation: float 6s ease-in-out infinite;
     }
 
-    .timer-text {
-        font-size: 2.5em;
-        color: #00FF00;
-        z-index: 10;
-    }
-
-    .ring {
+    .timer-ring {
         position: absolute;
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: transparent;
-        border: 10px solid rgba(0, 255, 0, 0.5);
-        border-top: 10px solid transparent;
-        animation: rotate 15s linear forwards;
+        border: 2px solid rgba(0, 243, 255, 0.1);
+        transform-style: preserve-3d;
+        animation: spin 15s linear infinite;
     }
 
-    @keyframes rotate {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
+    .timer-ring::before,
+    .timer-ring::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid transparent;
+        border-top: 4px solid var(--neon-blue);
+        border-left: 4px solid var(--neon-purple);
+        filter: drop-shadow(0 0 15px var(--glow-color));
     }
 
-    /* Countdown Text Animation */
-    @keyframes countdown {
-        0% {
-            opacity: 1;
-            transform: scale(1);
-        }
-        50% {
-            opacity: 0.7;
-            transform: scale(1.2);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
+    .timer-ring::after {
+        transform: rotate(60deg);
     }
 
-    /* Style for each second's number */
-    .timer-text {
-        animation: countdown 1s infinite;
+    .timer-core {
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        background: rgba(10, 10, 31, 0.9);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        box-shadow: 
+            0 0 30px rgba(0, 243, 255, 0.2),
+            inset 0 0 30px rgba(119, 0, 255, 0.2);
+        backdrop-filter: blur(5px);
+        transform: translateZ(20px);
+    }
+
+    .timer-display {
+        position: relative;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 5em;
+        color: var(--neon-blue);
+        text-shadow: 
+            0 0 10px var(--neon-blue),
+            0 0 20px var(--neon-blue),
+            0 0 30px var(--neon-blue);
+        letter-spacing: 2px;
+    }
+
+    .timer-label {
+        font-size: 1em;
+        color: var(--neon-purple);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin-top: 10px;
+        opacity: 0.8;
+    }
+
+    .hexagon {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, var(--neon-purple), transparent);
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        opacity: 0.1;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--neon-blue);
+        border-radius: 50%;
+        animation: particleFloat 3s infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotateX(20deg); }
+        50% { transform: translateY(-20px) rotateX(25deg); }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.1; }
+        50% { transform: scale(1.1); opacity: 0.2; }
+    }
+
+    @keyframes particleFloat {
+        0% { transform: translate(0, 0); opacity: 1; }
+        100% { transform: translate(var(--x, 50px), var(--y, -50px)); opacity: 0; }
+    }
+
+    .timer-display.warning {
+        color: #ff0055;
+        text-shadow: 
+            0 0 10px #ff0055,
+            0 0 20px #ff0055,
+            0 0 30px #ff0055;
+        animation: warningPulse 0.5s ease-in-out infinite;
+    }
+
+    @keyframes warningPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .scan-line {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        animation: scan 2s linear infinite;
+    }
+
+    @keyframes scan {
+        0% { transform: translateY(-150px); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translateY(150px); opacity: 0; }
     }
 </style>
 </head>
 <body>
 
-<div class="timer-container">
-    <div class="timer-text" id="timer">15</div>
-    <div class="ring"></div>
+<div class="scene">
+    <div class="timer-container">
+        <div class="hexagon"></div>
+        <div class="timer-ring"></div>
+        <div class="timer-core">
+            <div class="scan-line"></div>
+            <div class="timer-display" id="timer">15</div>
+            <div class="timer-label">Time Remaining</div>
+        </div>
+        <div class="particles" id="particles"></div>
+    </div>
 </div>
 
 <script>
     let timeLeft = 15;
     const timerDisplay = document.getElementById('timer');
+    const particlesContainer = document.getElementById('particles');
 
+    // Create floating particles
+    function createParticles() {
+        for(let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.setProperty('--x', `${Math.random() * 200 - 100}px`);
+            particle.style.setProperty('--y', `${Math.random() * 200 - 100}px`);
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    createParticles();
+
+    // Timer countdown
     const countdown = setInterval(() => {
         timeLeft--;
         timerDisplay.textContent = timeLeft;
 
-        // Adding smooth animation to the text
-        timerDisplay.style.animation = "countdown 1s infinite";
+        // Add warning effect for last 5 seconds
+        if(timeLeft <= 5) {
+            timerDisplay.classList.add('warning');
+        }
 
         if (timeLeft <= 0) {
             clearInterval(countdown);
-            window.location.href = 'test1phase2.html'; // Redirect to another page
+            window.location.href = 'test1phase2.html';
         }
+
+        // Recreate particles every second
+        particlesContainer.innerHTML = '';
+        createParticles();
     }, 1000);
 </script>
 
